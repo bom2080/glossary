@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임·PM·UGC 용어 자료집</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a24;
+    --border: #252535;
+    --accent: #7cffcb;
+    --text: #eeeef5;
+    --text-muted: #888899;
+    --text-dim: #44445a;
+    --cat-game:   #ff6b6b;
+    --cat-pm:     #6baaff;
+    --cat-ugc:    #7cffcb;
+    --cat-tech:   #ffb347;
+    --cat-mobile: #e879f9;
+    --cat-live:   #ffd447;
+    --cat-biz:    #00e5ff;
+    --cat-qa:     #f472b6;
+    --cat-tools:  #a3e635;
+    --cat-engine:  #c084fc;
+    --cat-devproc: #38bdf8;
+    --cat-infra:   #34d399;
+    --cat-data:    #fbbf24;
+    --cat-ai:      #d8b4fe;
+    --cat-art:     #ff8fab;
+    --radius: 10px;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--sans); background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom:1px solid var(--border);
+    padding:0 32px;
+    position:sticky; top:0;
+    background:rgba(10,10,15,0.97);
+    backdrop-filter:blur(16px);
+    z-index:100;
+    display:flex; align-items:center; gap:16px; height:60px;
+  }
+  .logo {
+    font-family:var(--mono); font-size:12px; font-weight:700;
+    color:var(--accent); letter-spacing:.08em; white-space:nowrap;
+  }
+  .logo span { color:var(--text-dim); }
+  .search-wrap { flex:1; max-width:480px; position:relative; }
+  .search-wrap input {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:8px; padding:8px 16px 8px 38px;
+    font-size:13px; font-family:var(--sans); color:var(--text); outline:none;
+    transition:border-color .2s;
+  }
+  .search-wrap input:focus { border-color:var(--accent); }
+  .search-wrap input::placeholder { color:var(--text-dim); }
+  .search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-dim); font-size:14px; pointer-events:none; }
+  #result-count { font-family:var(--mono); font-size:11px; color:var(--text-muted); white-space:nowrap; }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display:flex; gap:8px; padding:10px 32px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap; align-items:center;
+  }
+  .filter-label { font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-right:4px; letter-spacing:.06em; white-space:nowrap; flex-shrink:0; }
+  .maker { font-family:var(--mono); font-size:11px; color:var(--text-dim); white-space:nowrap; }
+  .maker span { color:var(--accent); font-weight:700; }
+  .cat-btn {
+    padding:4px 14px; border-radius:20px; border:1px solid var(--border);
+    background:transparent; font-size:12px; font-family:var(--sans); font-weight:700;
+    cursor:pointer; transition:all .15s; color:var(--text-muted); flex-shrink:0; white-space:nowrap;
+  }
+  .cat-btn:hover { border-color:var(--text-muted); color:var(--text); }
+  .cat-btn.active[data-cat="all"]  { background:var(--accent);    border-color:var(--accent);    color:#000; }
+  .cat-btn.active[data-cat="game"] { background:var(--cat-game);  border-color:var(--cat-game);  color:#fff; }
+  .cat-btn.active[data-cat="pm"]   { background:var(--cat-pm);    border-color:var(--cat-pm);    color:#000; }
+  .cat-btn.active[data-cat="ugc"]  { background:var(--cat-ugc);   border-color:var(--cat-ugc);   color:#000; }
+  .cat-btn.active[data-cat="tech"]   { background:var(--cat-tech);   border-color:var(--cat-tech);   color:#000; }
+  .cat-btn.active[data-cat="mobile"] { background:var(--cat-mobile); border-color:var(--cat-mobile); color:#000; }
+  .cat-btn.active[data-cat="live"]   { background:var(--cat-live);   border-color:var(--cat-live);   color:#000; }
+  .cat-btn.active[data-cat="collab"] { background:linear-gradient(90deg,var(--cat-biz),var(--cat-qa)); border-color:var(--cat-biz); color:#000; }
+  .cat-btn.active[data-cat="biz"]    { background:var(--cat-biz);    border-color:var(--cat-biz);    color:#000; }
+  .cat-btn.active[data-cat="qa"]     { background:var(--cat-qa);     border-color:var(--cat-qa);     color:#000; }
+  .cat-btn.active[data-cat="tools"]  { background:var(--cat-tools);  border-color:var(--cat-tools);  color:#000; }
+  .cat-btn.active[data-cat="engine"]  { background:var(--cat-engine);  border-color:var(--cat-engine);  color:#fff; }
+  .cat-btn.active[data-cat="devproc"] { background:var(--cat-devproc); border-color:var(--cat-devproc); color:#000; }
+  .cat-btn.active[data-cat="infra"]   { background:var(--cat-infra);   border-color:var(--cat-infra);   color:#000; }
+  .cat-btn.active[data-cat="data"]    { background:var(--cat-data);    border-color:var(--cat-data);    color:#000; }
+  .cat-btn.active[data-cat="ai"]      { background:var(--cat-ai);      border-color:var(--cat-ai);      color:#000; }
+  .cat-btn.active[data-cat="art"]     { background:var(--cat-art);     border-color:var(--cat-art);     color:#000; }
+
+  /* ── MAIN ── */
+  .main { max-width:1280px; margin:0 auto; padding:24px 32px; }
+
+  /* ── GRID ── */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:10px; }
+
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:16px 18px;
+    cursor:pointer; transition:transform .15s, border-color .15s, box-shadow .15s;
+    position:relative; overflow:hidden;
+    animation:fadeUp .3s ease both;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0;
+    width:3px; height:100%; border-radius:2px 0 0 2px;
+  }
+  .card[data-cat="game"]::before   { background:var(--cat-game); }
+  .card[data-cat="pm"]::before     { background:var(--cat-pm); }
+  .card[data-cat="ugc"]::before    { background:var(--cat-ugc); }
+  .card[data-cat="tech"]::before   { background:var(--cat-tech); }
+  .card[data-cat="mobile"]::before { background:var(--cat-mobile); }
+  .card[data-cat="live"]::before   { background:var(--cat-live); }
+  .card[data-cat="biz"]::before    { background:var(--cat-biz); }
+  .card[data-cat="qa"]::before     { background:var(--cat-qa); }
+  .card[data-cat="tools"]::before  { background:var(--cat-tools); }
+  .card[data-cat="engine"]::before  { background:var(--cat-engine); }
+  .card[data-cat="devproc"]::before { background:var(--cat-devproc); }
+  .card[data-cat="infra"]::before   { background:var(--cat-infra); }
+  .card[data-cat="data"]::before    { background:var(--cat-data); }
+  .card[data-cat="ai"]::before      { background:var(--cat-ai); }
+  .card[data-cat="art"]::before     { background:var(--cat-art); }
+  .card:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.5); }
+  .card[data-cat="game"]:hover   { border-color:var(--cat-game); }
+  .card[data-cat="pm"]:hover     { border-color:var(--cat-pm); }
+  .card[data-cat="ugc"]:hover    { border-color:var(--cat-ugc); }
+  .card[data-cat="tech"]:hover   { border-color:var(--cat-tech); }
+  .card[data-cat="mobile"]:hover { border-color:var(--cat-mobile); }
+  .card[data-cat="live"]:hover   { border-color:var(--cat-live); }
+  .card[data-cat="biz"]:hover    { border-color:var(--cat-biz); }
+  .card[data-cat="qa"]:hover     { border-color:var(--cat-qa); }
+  .card[data-cat="tools"]:hover  { border-color:var(--cat-tools); }
+  .card[data-cat="engine"]:hover  { border-color:var(--cat-engine); }
+  .card[data-cat="devproc"]:hover { border-color:var(--cat-devproc); }
+  .card[data-cat="infra"]:hover   { border-color:var(--cat-infra); }
+  .card[data-cat="data"]:hover    { border-color:var(--cat-data); }
+  .card[data-cat="ai"]:hover      { border-color:var(--cat-ai); }
+  .card[data-cat="art"]:hover     { border-color:var(--cat-art); }
+
+  .card-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; gap:8px; }
+  .card-term { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--text); word-break:break-all; line-height:1.3; }
+  .card-eng  { font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-top:2px; }
+  .cat-tag { font-size:9px; font-family:var(--mono); font-weight:700; padding:3px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0; letter-spacing:.04em; }
+  .cat-tag.game   { background:rgba(255,107,107,.13); color:var(--cat-game); }
+  .cat-tag.pm     { background:rgba(107,170,255,.13); color:var(--cat-pm); }
+  .cat-tag.ugc    { background:rgba(124,255,203,.13); color:var(--cat-ugc); }
+  .cat-tag.tech   { background:rgba(255,179,71,.13);  color:var(--cat-tech); }
+  .cat-tag.mobile { background:rgba(232,121,249,.13); color:var(--cat-mobile); }
+  .cat-tag.live   { background:rgba(255,212,71,.13);  color:var(--cat-live); }
+  .cat-tag.biz    { background:rgba(0,229,255,.13);   color:var(--cat-biz); }
+  .cat-tag.qa     { background:rgba(244,114,182,.13); color:var(--cat-qa); }
+  .cat-tag.tools  { background:rgba(163,230,53,.13);  color:var(--cat-tools); }
+  .cat-tag.engine  { background:rgba(192,132,252,.13); color:var(--cat-engine); }
+  .cat-tag.devproc { background:rgba(56,189,248,.13);  color:var(--cat-devproc); }
+  .cat-tag.infra   { background:rgba(52,211,153,.13);  color:var(--cat-infra); }
+  .cat-tag.data    { background:rgba(251,191,36,.13);  color:var(--cat-data); }
+  .cat-tag.ai      { background:rgba(216,180,254,.13); color:var(--cat-ai); }
+  .cat-tag.art     { background:rgba(255,143,171,.13); color:var(--cat-art); }
+
+  .card-desc { font-size:12.5px; line-height:1.8; color:#c5c5d8; margin-bottom:8px; }
+
+  .card-analogy {
+    background:var(--surface2); border-left:3px solid var(--border);
+    border-radius:0 6px 6px 0; padding:8px 12px;
+    font-size:12px; color:var(--text-muted); line-height:1.7; display:none;
+  }
+  .card.expanded .card-analogy { display:block; }
+  .card-analogy::before { content:'💡 비유  '; font-weight:700; color:var(--accent); font-size:10px; }
+
+  .card-toggle { margin-top:8px; font-size:10px; font-family:var(--mono); color:var(--text-dim); }
+  .card.expanded  .card-toggle-txt::after { content:'접기 ↑'; }
+  .card:not(.expanded) .card-toggle-txt::after { content:'비유 보기 ↓'; }
+
+  .empty { grid-column:1/-1; text-align:center; padding:80px 20px; color:var(--text-dim); }
+  .empty .big { font-family:var(--mono); font-size:32px; margin-bottom:12px; }
+
+  footer {
+    text-align:center; padding:40px 32px; border-top:1px solid var(--border);
+    margin-top:60px; font-size:10px; color:var(--text-dim); font-family:var(--mono); letter-spacing:.05em;
+  }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── 플로팅 찾기 버튼 ── */
+  .fab-search {
+    position:fixed; bottom:32px; right:32px; z-index:200;
+    width:52px; height:52px; border-radius:50%;
+    background:var(--accent); border:none; cursor:pointer;
+    font-size:20px; box-shadow:0 4px 20px rgba(0,0,0,.5);
+    transition:transform .15s, box-shadow .15s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .fab-search:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(124,255,203,.35); }
+
+  /* ── 검색 모달 ── */
+  .search-modal {
+    position:fixed; inset:0; z-index:300;
+    background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .search-modal.open { opacity:1; pointer-events:all; }
+  .search-box {
+    background:var(--surface); border:1px solid var(--accent);
+    border-radius:16px; padding:24px 28px; width:min(540px, 90vw);
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+  }
+  .search-box label {
+    display:block; font-family:var(--mono); font-size:10px;
+    color:var(--accent); letter-spacing:.08em; margin-bottom:10px;
+  }
+  .search-box input {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; padding:12px 16px; font-size:15px;
+    font-family:var(--sans); color:var(--text); outline:none;
+    transition:border-color .2s;
+  }
+  .search-box input:focus { border-color:var(--accent); }
+  .search-hint {
+    margin-top:10px; font-size:11px; color:var(--text-dim);
+    font-family:var(--mono); display:flex; justify-content:space-between;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GLOSSARY<span> / </span>GAME·PM·UGC</div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="용어 검색... (예: 밸런싱, 스프린트, 마켓플레이스)" autocomplete="off">
+  </div>
+  <div id="result-count"></div>
+  <div class="maker">made by <span>bomin</span></div>
+</header>
+
+<div class="filter-bar">
+  <span class="filter-label">CATEGORY</span>
+  <button class="cat-btn active" data-cat="all">전체 <span id="total-badge"></span></button>
+  <button class="cat-btn" data-cat="pm">📋 프로젝트 관리</button>
+  <button class="cat-btn" data-cat="game">🎮 게임 업계</button>
+  <button class="cat-btn" data-cat="ugc">🧩 UGC / 플랫폼</button>
+  <button class="cat-btn" data-cat="tech">⚙️ 개발 / 기술</button>
+  <button class="cat-btn" data-cat="mobile">📱 모바일 프로세스</button>
+  <button class="cat-btn" data-cat="live">🔴 라이브 운영</button>
+  <button class="cat-btn" data-cat="collab">🤝 협업부서</button>
+  <button class="cat-btn" data-cat="tools">🛠️ 협업 툴</button>
+  <button class="cat-btn" data-cat="engine">🧱 엔진 / UaaL</button>
+  <button class="cat-btn" data-cat="devproc">🔄 개발 프로세스</button>
+  <button class="cat-btn" data-cat="infra">🖥️ 인프라 / 배포</button>
+  <button class="cat-btn" data-cat="data">📊 데이터 / 분석</button>
+  <button class="cat-btn" data-cat="ai">🤖 AI / 생산성</button>
+  <button class="cat-btn" data-cat="art">🎨 아트</button>
+</div>
+
+<div class="main">
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>GAME · PM · UGC GLOSSARY &nbsp;|&nbsp; 클릭하면 비유가 펼쳐져요</footer>
+
+<!-- 플로팅 찾기 버튼 -->
+<button class="fab-search" id="fabBtn" title="찾기">🔍</button>
+
+<!-- 검색 모달 -->
+<div class="search-modal" id="searchModal">
+  <div class="search-box">
+    <label>SEARCH</label>
+    <input type="text" id="modalSearch" placeholder="용어, 영어, 한글 발음 검색..." autocomplete="off">
+    <div class="search-hint">
+      <span id="modalCount"></span>
+      <span>ESC 또는 바깥 클릭으로 닫기</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const terms = [
+
+/* ──────────────── 게임 업계 ──────────────── */
+{ term:"GDD", eng:"Game Design Document", cat:"game",
+  desc:"게임의 전체 설계를 담은 기획 문서입니다. 장르, 핵심 메커니즘, 세계관, 아트 방향성, 수익 모델까지 게임의 청사진 역할을 합니다. 규모에 따라 수백 페이지에 달하기도 합니다.",
+  analogy:"건축 설계도예요. 실제로 짓다 보면 바뀌는 부분이 생기지만, 없으면 팀 전체가 서로 다른 집을 짓게 됩니다." },
+
+{ term:"알파 / 베타 / 골드", eng:"Alpha / Beta / Gold Master", cat:"game",
+  desc:"게임 개발 단계를 나타내는 용어입니다. 알파(내부 테스트 가능 수준), 베타(외부 테스트 가능 수준), 골드(출시 직전 최종 완성본) 순서로 진행됩니다.",
+  analogy:"요리의 개발 단계예요. 레시피 연구(알파) → 시식 행사(베타) → 정식 메뉴 출시(골드) 순으로 완성되어 갑니다." },
+
+{ term:"DAU / MAU", eng:"Daily / Monthly Active User", cat:"game",
+  desc:"일간 활성 사용자(DAU)와 월간 활성 사용자(MAU)입니다. 게임의 생명력을 보여주는 핵심 지표이며, DAU/MAU 비율(스티키니스)이 높을수록 유저가 꾸준히 돌아오고 있다는 의미입니다.",
+  analogy:"단골 고객 비율이에요. 한 달에 한 번 오는 사람과 매일 오는 사람이 다르듯, 게임도 진짜 팬의 수를 이 지표로 확인합니다." },
+
+{ term:"ARPU / ARPPU", eng:"Average Revenue Per User / Per Paying User", cat:"game",
+  desc:"ARPU는 전체 사용자 1인당 평균 매출, ARPPU는 실제 결제한 사용자 1인당 평균 매출입니다. 두 수치의 차이가 클수록 과금 유저가 소수임을 의미합니다.",
+  analogy:"카페 매출 분석이에요. 손님 100명 중 실제 커피를 산 사람이 20명이라면, 전체 1인당 매출과 구매자 1인당 매출이 크게 다르게 나옵니다." },
+
+{ term:"리텐션", eng:"Retention / D1·D7·D30", cat:"game",
+  desc:"게임을 설치한 유저가 다음날(D1), 7일 후(D7), 30일 후(D30)에도 게임에 돌아오는 비율입니다. 온보딩과 코어 루프 설계가 리텐션을 좌우합니다.",
+  analogy:"헬스장 등록 후 실제로 계속 나오는 비율이에요. D1은 다음날 나왔는지, D30은 한 달 뒤에도 다니는지를 봅니다." },
+
+{ term:"코어 루프", eng:"Core Loop / Game Loop", cat:"game",
+  desc:"게임에서 유저가 반복하는 핵심 행동 사이클입니다. 예: 전투 → 보상 획득 → 캐릭터 강화 → 다시 전투. 이 루프가 흥미롭고 빠를수록 유저 체류 시간이 늘어납니다.",
+  analogy:"SNS의 피드 스크롤이에요. 올리기→반응 확인→다시 올리기 루프가 반복되듯, 게임도 같은 구조로 유저를 붙잡습니다." },
+
+{ term:"온보딩", eng:"Onboarding / FTUE", cat:"game",
+  desc:"신규 유저가 게임을 처음 접했을 때의 경험 설계입니다. FTUE(First Time User Experience)라고도 합니다. 좋은 온보딩은 핵심 재미를 빠르게 경험시키고, 나쁜 온보딩은 유저를 D1에 잃게 만듭니다.",
+  analogy:"첫날 직장 적응 과정이에요. 어디 앉고, 뭘 먹고, 누구에게 물어봐야 하는지 알려주는 신입 OT가 없으면 그냥 도망갑니다." },
+
+{ term:"밸런싱", eng:"Game Balancing", cat:"game",
+  desc:"캐릭터 능력치, 난이도, 경제 시스템 등 게임 요소 간의 균형을 조정하는 작업입니다. 특정 캐릭터가 너무 강하면 메타가 고착되고, 너무 어려우면 이탈이 발생합니다.",
+  analogy:"보드게임 룰 조정이에요. 주사위 한 개가 너무 강하면 다른 말들이 의미 없어지듯, 게임도 균형이 맞아야 모두가 즐길 수 있습니다." },
+
+{ term:"메타게임", eng:"Meta Game / Current Meta", cat:"game",
+  desc:"특정 시점에 가장 강력하거나 효율적인 전략·캐릭터·아이템 조합입니다. 'OP(Over Powered)' 캐릭터가 출시되면 새로운 메타가 형성됩니다. 메타는 패치로 계속 변합니다.",
+  analogy:"가위바위보 대회에서 모두가 '보'를 내는 상황이에요. 모두가 같은 전략을 쓰면 결국 그게 메타가 되고, 이기려면 메타를 읽어야 합니다." },
+
+{ term:"라이브 서비스", eng:"Live Service / GaaS (Game as a Service)", cat:"game",
+  desc:"출시 후에도 지속적인 콘텐츠 업데이트, 이벤트, 시즌 패스로 운영하는 게임 모델입니다. 패키지 판매(B2P)와 달리 지속적인 수익과 유저 관리가 필요합니다.",
+  analogy:"스트리밍 서비스예요. 영화 한 편 팔고 끝나는 게 아니라, 매달 새 콘텐츠를 공급해야 구독자를 붙잡을 수 있습니다." },
+
+{ term:"가챠", eng:"Gacha / Loot Box / 확률형 아이템", cat:"game",
+  desc:"뽑기처럼 무엇이 나올지 모르는 랜덤 보상 시스템입니다. 희귀 아이템의 출현 확률이 낮아 반복 과금을 유도합니다. 각국에서 규제 대상이 되고 있습니다.",
+  analogy:"뽑기 기계예요. 100원 넣으면 뭐가 나올지 모르지만, 갖고 싶은 게 나올 때까지 계속 넣게 만드는 구조입니다." },
+
+{ term:"시즌 패스", eng:"Battle Pass / Season Pass", cat:"game",
+  desc:"일정 기간(시즌) 동안 게임을 플레이하며 미션을 완료하면 보상을 언락하는 콘텐츠 판매 방식입니다. 구독형 수익 모델로 라이브 서비스와 궁합이 좋습니다.",
+  analogy:"스탬프 카드예요. 커피 10잔 마시면 1잔 무료처럼, 게임도 일정 플레이를 하면 보상을 주는 구조입니다." },
+
+{ term:"소프트 런치", eng:"Soft Launch", cat:"game",
+  desc:"일부 국가에서 먼저 출시해 데이터를 수집하고 문제를 수정한 후 전 세계에 정식 출시하는 전략입니다. 주로 캐나다, 호주, 필리핀 등이 소프트 런치 지역으로 사용됩니다.",
+  analogy:"프랜차이즈 시범 운영이에요. 전국 확장 전에 한 지역에서 먼저 열어 고객 반응을 보고 메뉴와 운영을 다듬습니다." },
+
+{ term:"핫픽스", eng:"Hotfix", cat:"game",
+  desc:"심각한 버그나 서버 장애를 긴급하게 수정하는 소규모 패치입니다. 정기 업데이트 일정과 무관하게 즉시 배포됩니다.",
+  analogy:"소화기예요. 정기 소방 훈련(정기 패치)과 달리, 불이 나면 바로 꺼야 하는 긴급 대응입니다." },
+
+{ term:"QA", eng:"Quality Assurance", cat:"game",
+  desc:"게임 출시 전 버그와 품질을 검증하는 과정과 팀입니다. 기능 테스트, 회귀 테스트, 호환성 테스트, 성능 테스트 등을 수행합니다.",
+  analogy:"식품 검수팀이에요. 식당 주방에서 요리가 다 만들어졌을 때, 손님상에 내보내기 전 맛과 위생을 최종 확인하는 역할입니다." },
+
+{ term:"PvP / PvE", eng:"Player vs Player / Player vs Environment", cat:"game",
+  desc:"PvP는 플레이어끼리 대결하는 모드, PvE는 플레이어가 NPC나 몬스터를 상대하는 모드입니다. 두 모드는 밸런싱 기준이 완전히 달라 별도로 관리됩니다.",
+  analogy:"스포츠로 치면 PvP는 대인 경기, PvE는 장애물 코스예요. 100미터 달리기 선수와 마라톤 선수가 다른 것처럼 요구 능력이 다릅니다." },
+
+{ term:"세션 타임", eng:"Session Length / Session Time", cat:"game",
+  desc:"유저가 게임을 켜고 끄는 1회 플레이 단위의 시간입니다. 모바일 게임은 보통 10~20분, PC MMO는 1시간 이상을 타깃으로 설계됩니다.",
+  analogy:"카페에 앉아 있는 시간이에요. 테이크아웃 커피(모바일)와 카페에서 작업하는 사람(PC)의 체류 시간은 완전히 다른 경험입니다." },
+
+/* ──────────────── 프로젝트 관리 ──────────────── */
+{ term:"마일스톤", eng:"Milestone", cat:"pm",
+  desc:"프로젝트의 주요 완료 시점입니다. '알파 빌드 완성', 'CBT 오픈', '정식 출시'처럼 중간 목표 지점을 설정해 일정과 진척을 관리합니다.",
+  analogy:"고속도로 이정표예요. 목적지까지 한 번에 가는 게 아니라, 중간 지점마다 '여기까지 왔다'를 확인하며 방향을 점검합니다." },
+
+{ term:"스프린트", eng:"Sprint", cat:"pm",
+  desc:"애자일 방법론에서 1~4주 단위로 나눈 개발 사이클입니다. 각 스프린트마다 목표를 정하고, 끝나면 데모와 회고를 진행합니다.",
+  analogy:"단거리 달리기예요. 마라톤처럼 무한정 달리는 대신, 짧게 전력으로 달리고 잠시 쉬며 페이스를 조절합니다." },
+
+{ term:"백로그", eng:"Product / Sprint Backlog", cat:"pm",
+  desc:"해야 할 작업의 우선순위 목록입니다. Product Backlog는 전체 할 일 목록, Sprint Backlog는 이번 스프린트에서 할 일 목록입니다. Jira에서는 이슈들이 백로그로 관리됩니다.",
+  analogy:"냉장고 속 재료 목록이에요. 언젠가 만들 음식 재료 전체(Product Backlog)와 오늘 저녁에 쓸 재료(Sprint Backlog)를 구분해서 관리합니다." },
+
+{ term:"스코프 크리프", eng:"Scope Creep", cat:"pm",
+  desc:"처음 합의한 범위를 벗어나 기능이나 요구사항이 통제 없이 계속 추가되는 현상입니다. 일정과 예산 초과의 가장 흔한 원인입니다.",
+  analogy:"집 리모델링이에요. 부엌만 고치려 했는데 거실도, 화장실도... 결국 예산이 두 배가 됩니다. 'Just one more thing'의 함정입니다." },
+
+{ term:"WBS", eng:"Work Breakdown Structure", cat:"pm",
+  desc:"프로젝트를 관리 가능한 소단위 작업으로 분해한 계층 구조도입니다. 큰 목표를 작은 태스크로 쪼개 담당자와 일정을 부여합니다.",
+  analogy:"요리 레시피에요. '저녁 만들기'를 재료 준비 → 손질 → 조리 → 플레이팅으로 분해하듯, 프로젝트도 잘게 나눠야 실행 가능해집니다." },
+
+{ term:"KPI", eng:"Key Performance Indicator", cat:"pm",
+  desc:"핵심 성과 지표입니다. 프로젝트나 팀의 목표 달성 여부를 측정하는 수치입니다. 게임에서는 DAU, 리텐션, 매출 등이 KPI가 됩니다.",
+  analogy:"성적표예요. 공부를 '열심히 했다'는 주관적 느낌이 아니라, 시험 점수라는 숫자로 확인하는 것처럼 KPI도 결과를 수치로 검증합니다." },
+
+{ term:"OKR", eng:"Objectives and Key Results", cat:"pm",
+  desc:"목표(Objective)와 핵심 결과(Key Results)를 연결하는 목표 설정 프레임워크입니다. Objective는 방향성, Key Results는 측정 가능한 달성 기준입니다. 구글이 전파해 널리 쓰이게 됐습니다.",
+  analogy:"등산 목표예요. 'O: 더 건강해지기' / 'KR: 이번 달 한라산 완등, 주 3회 운동 유지'. 막연한 목표를 측정 가능한 결과로 연결합니다." },
+
+{ term:"스테이크홀더", eng:"Stakeholder", cat:"pm",
+  desc:"프로젝트에 이해관계가 있는 모든 관계자입니다. 경영진, 클라이언트, 개발팀, 퍼블리셔, 유저까지 포함됩니다. PM의 핵심 업무 중 하나는 스테이크홀더 관리입니다.",
+  analogy:"결혼식 관계자예요. 신랑신부(개발팀), 부모님(경영진), 하객(유저), 웨딩홀(퍼블리셔) 모두 이해관계가 다르고, 진행자(PM)가 중간에서 조율합니다." },
+
+{ term:"크리티컬 패스", eng:"Critical Path", cat:"pm",
+  desc:"프로젝트 완료까지의 가장 긴 의존성 체인입니다. 이 경로상의 작업이 하루 지연되면 전체 일정이 하루 늦어집니다. PM이 가장 집중해서 관리해야 하는 경로입니다.",
+  analogy:"교통 병목 구간이에요. 다른 도로가 아무리 빨라도, 모든 차가 지나야 하는 한 구간이 막히면 전체가 막힙니다." },
+
+{ term:"RACI", eng:"RACI Chart", cat:"pm",
+  desc:"역할과 책임을 명확히 하는 프레임워크입니다. R(Responsible: 실행자), A(Accountable: 최종 책임자), C(Consulted: 자문), I(Informed: 공유 대상)으로 구분합니다.",
+  analogy:"팀 프로젝트 역할 분담표예요. '누가 발표하고(R), 누가 최종 점수 책임지고(A), 누구에게 물어보고(C), 누구에게 알리는지(I)' 미리 정해두면 혼선이 없습니다." },
+
+{ term:"번다운 차트", eng:"Burndown Chart", cat:"pm",
+  desc:"남은 작업량이 시간에 따라 줄어드는 것을 시각화한 그래프입니다. 이상적인 소진 속도(ideal line)와 실제 진척(actual line)을 비교해 지연 여부를 조기에 파악합니다.",
+  analogy:"연료 게이지예요. 목적지까지 가는 동안 기름이 계획대로 줄어드는지, 이상하게 빨리 줄어드는지 확인하는 도구입니다." },
+
+{ term:"회고 (Retrospective)", eng:"Sprint Retrospective", cat:"pm",
+  desc:"스프린트나 마일스톤 완료 후 '잘된 점 / 개선할 점 / 다음에 시도할 것'을 팀이 함께 점검하는 시간입니다. 결과보다 과정을 개선하는 데 목적이 있습니다.",
+  analogy:"경기 후 팀 미팅이에요. 이긴 것에 취해있는 게 아니라, 왜 이겼는지 왜 실수했는지를 분석해서 다음 경기를 준비합니다." },
+
+{ term:"의존성 관리", eng:"Dependency Management", cat:"pm",
+  desc:"A 작업이 B 작업 완료 후에야 시작 가능한 선후 관계를 파악하고 관리하는 것입니다. Jira에서 이슈 간 '차단됨(blocked by)' 링크가 의존성을 표현합니다.",
+  analogy:"건물 공사 순서예요. 기초 공사가 끝나야 벽을 세우고, 벽이 있어야 지붕을 얹을 수 있습니다. 순서를 어기면 무너집니다." },
+
+{ term:"리소스 레벨링", eng:"Resource Leveling", cat:"pm",
+  desc:"특정 시점에 팀원이 과부하 또는 유휴 상태가 되지 않도록 작업을 균등하게 분배하는 것입니다. 일정 지연 없이 번아웃을 방지하는 균형점을 찾는 작업입니다.",
+  analogy:"카페 교대 스케줄이에요. 점심 피크 때 직원이 몰리지 않고, 한가한 오후에 놀지도 않게 적절히 배치하는 것입니다." },
+
+{ term:"변경 관리", eng:"Change Management", cat:"pm",
+  desc:"범위, 일정, 리소스 변경 요청이 왔을 때 영향을 분석하고 승인/거절/조정하는 프로세스입니다. 변경을 무조건 막는 게 아니라 체계적으로 수용하는 것이 목표입니다.",
+  analogy:"설계 변경 승인 프로세스예요. 시공 중 인테리어를 바꾸고 싶을 때, 비용·기간 영향을 먼저 산출하고 건축주의 동의를 받아야 공사를 변경합니다." },
+
+{ term:"위험 관리 (리스크)", eng:"Risk Management", cat:"pm",
+  desc:"프로젝트에 영향을 줄 수 있는 위험 요소를 사전에 식별하고, 발생 가능성과 영향도를 평가해 대응 계획을 세우는 것입니다. 리스크 매트릭스로 시각화합니다.",
+  analogy:"여행 보험이에요. 사고가 안 나면 좋지만, 혹시 모를 상황을 대비해 미리 어떻게 대응할지 계획해 두는 것입니다." },
+
+{ term:"빌드 프로세스", eng:"Build Process / Release Build", cat:"pm",
+  desc:"소스코드를 실제 배포 가능한 실행 파일로 만드는 전체 과정입니다. 개발 빌드(Dev Build)와 배포 빌드(Release Build)로 나뉘며, 배포 빌드는 서명(코드 사이닝), 난독화, 최적화 과정이 추가됩니다. PM은 빌드 브랜치 관리와 배포 일정을 조율합니다.",
+  analogy:"인쇄소에 보내는 최종 원고 작업이에요. 편집용 파일(개발 빌드)과 실제 인쇄용 파일(배포 빌드)은 형식이 다르고, 인쇄 전 최종 교정(코드 사이닝·검수)을 거쳐야 합니다." },
+
+{ term:"형상 관리", eng:"Configuration Management / Version Control (Git)", cat:"pm",
+  desc:"소스코드, 에셋, 빌드 설정 등 프로젝트 산출물의 변경 이력을 추적하고 관리하는 체계입니다. Git(GitHub/GitLab)이 대표적이며, 브랜치 전략(main·develop·feature)으로 병렬 개발을 지원합니다. CM(형상관리) 담당자가 별도로 있는 조직도 있습니다.",
+  analogy:"문서 버전 관리예요. '최종.docx', '최최종.docx', '진짜최종.docx'처럼 파일을 쌓는 대신, 누가 언제 무엇을 바꿨는지 이력이 자동으로 기록되고 언제든 과거 버전으로 돌아갈 수 있습니다." },
+
+{ term:"스토어 심사", eng:"App Store Review / Google Play / Steam Review", cat:"pm",
+  desc:"앱이나 게임을 스토어에 출시하기 전 플랫폼 측의 정책 검토 과정입니다. Apple App Store는 1~3일(정책 위반 시 리젝), Google Play는 1~3일(비교적 관대), Steam은 3~5일(콘텐츠·기술 검토)이 소요됩니다. 심사 기간을 출시 일정에 반드시 포함해야 하며, 리젝 시 수정 후 재심사 기간이 추가됩니다.",
+  analogy:"출입국 심사예요. 항공편이 아무리 일찍 도착해도 심사대를 통과해야 입국할 수 있습니다. 심사관이 문제를 발견하면(리젝) 다시 줄을 서야 하니, 미리 서류를 철저히 준비해야 합니다." },
+
+/* ──────────────── UGC / 플랫폼 ──────────────── */
+{ term:"UGC", eng:"User Generated Content", cat:"ugc",
+  desc:"일반 사용자가 직접 제작한 콘텐츠입니다. 게임에서는 맵, 아이템, 게임 모드, 스킨 등이 해당됩니다. 플랫폼이 UGC를 지원하면 콘텐츠 공급 비용을 크게 줄이면서 롱테일 콘텐츠를 확보할 수 있습니다.",
+  analogy:"유튜브예요. 플랫폼이 콘텐츠를 만들지 않아도, 크리에이터들이 스스로 채워줍니다. 플랫폼은 환경만 만들면 됩니다." },
+
+{ term:"크리에이터 이코노미", eng:"Creator Economy", cat:"ugc",
+  desc:"콘텐츠 창작자가 플랫폼을 통해 수익을 창출하는 생태계입니다. 크리에이터가 돈을 벌수록 더 좋은 콘텐츠를 만들고, 플랫폼도 성장하는 선순환 구조가 이상적입니다.",
+  analogy:"프랜차이즈 모델이에요. 가맹점(크리에이터)이 장사를 잘할수록 본사(플랫폼)도 수수료 수익이 늘고, 브랜드도 강해집니다." },
+
+{ term:"마켓플레이스", eng:"Marketplace / Item Store", cat:"ugc",
+  desc:"크리에이터가 만든 아이템, 맵, 게임 모드 등을 사고파는 플랫폼 내 거래 공간입니다. 수익 공유 구조로 크리에이터에게 수익의 일부를 분배합니다.",
+  analogy:"앱스토어예요. 애플이 직접 앱을 만드는 게 아니라, 개발자들이 올리고 판매하는 장터를 운영하면서 수수료를 가져갑니다." },
+
+{ term:"버추얼 이코노미", eng:"Virtual Economy / In-game Economy", cat:"ugc",
+  desc:"게임·플랫폼 내에서 가상 화폐와 아이템이 생산·소비·유통되는 경제 시스템입니다. 인플레이션 방지를 위한 화폐 소각(sink), 공급 조절이 중요합니다.",
+  analogy:"섬나라 경제예요. 외부 유입(코인 판매)과 내부 소비(아이템 구매)가 균형을 이뤄야 화폐 가치가 유지됩니다." },
+
+{ term:"샌드박스", eng:"Sandbox", cat:"ugc",
+  desc:"정해진 목표 없이 자유롭게 창작하고 탐험할 수 있는 열린 게임 환경입니다. UGC 플랫폼의 핵심 요소이며 마인크래프트, 로블록스가 대표적입니다.",
+  analogy:"모래놀이터예요. '이렇게 놀아라'는 규칙 없이, 아이들이 자기만의 방식으로 성을 쌓고 터널을 파고 놉니다." },
+
+{ term:"모더레이션", eng:"Content Moderation", cat:"ugc",
+  desc:"플랫폼 내 부적절한 콘텐츠, 혐오 표현, 저작권 침해, 불법 행위를 검토하고 제재하는 과정입니다. 자동화(AI 필터)와 수동(휴먼 리뷰)을 병행합니다.",
+  analogy:"아파트 관리소예요. 주민들이 자유롭게 살 수 있도록 하면서도, 소음·쓰레기·불법 증축 등을 관리해 공동생활 질서를 유지합니다." },
+
+{ term:"수익 공유", eng:"Revenue Share / Creator Fund", cat:"ugc",
+  desc:"플랫폼이 크리에이터의 콘텐츠 판매 수익을 일정 비율로 나누는 구조입니다. 로블록스는 70:30(크리에이터:플랫폼), 에픽은 88:12를 사용합니다.",
+  analogy:"음반사 계약이에요. 아티스트가 앨범을 내면, 음반사가 유통·홍보를 담당하고 수익을 일정 비율로 나눕니다." },
+
+{ term:"소셜 그래프", eng:"Social Graph", cat:"ugc",
+  desc:"플랫폼 내 유저 간의 관계망입니다. 친구, 팔로워, 길드, 파티 등의 연결 구조가 소셜 그래프를 형성합니다. 소셜 그래프가 촘촘할수록 이탈률이 낮아집니다.",
+  analogy:"인맥 지도예요. 친구가 많은 사람일수록 SNS를 끊기 어렵듯, 게임도 함께 하는 사람이 많을수록 떠나기 어렵습니다." },
+
+{ term:"크로스플레이", eng:"Cross-Play / Cross-Platform", cat:"ugc",
+  desc:"PC, 콘솔(PS/Xbox), 모바일 등 다른 플랫폼의 유저들이 같은 서버에서 함께 플레이할 수 있는 기능입니다. UGC 플랫폼에서는 생태계 통합의 핵심입니다.",
+  analogy:"카카오톡이에요. 아이폰이든 안드로이드든 상관없이 같은 채팅방에서 대화할 수 있는 것처럼, 플랫폼 장벽을 허무는 개념입니다." },
+
+{ term:"아바타 시스템", eng:"Avatar / Character Customization", cat:"ugc",
+  desc:"플랫폼 내에서 유저의 디지털 정체성을 표현하는 캐릭터/외형 커스터마이징 시스템입니다. 아바타 아이템은 버추얼 이코노미의 핵심 상품입니다.",
+  analogy:"프로필 사진이에요. 본인을 대표하는 이미지를 꾸미는 데 많은 사람들이 시간과 돈을 씁니다. 디지털 공간에서 외모는 아바타입니다." },
+
+{ term:"피드 알고리즘", eng:"Feed / Discovery Algorithm", cat:"ugc",
+  desc:"유저가 관심 있을 만한 콘텐츠를 우선적으로 노출시키는 추천 로직입니다. 체류 시간, 상호작용, 관계 등을 기반으로 개인화됩니다.",
+  analogy:"넷플릭스 추천이에요. 내가 본 영화들을 분석해서, 다음에 볼 것 같은 영상을 먼저 보여줍니다. 이 알고리즘이 플랫폼 체류 시간을 결정합니다." },
+
+{ term:"DAU per Creator", eng:"DAU/Creator Ratio", cat:"ugc",
+  desc:"전체 DAU 중 실제 콘텐츠를 만드는 크리에이터의 비율입니다. 건강한 UGC 플랫폼은 소비자와 창작자가 균형 있게 존재해야 합니다.",
+  analogy:"위키피디아 편집자 비율이에요. 대부분이 읽기만 하고, 소수만 글을 씁니다. 그 소수가 전체 생태계를 유지합니다." },
+
+{ term:"콘텐츠 라이프사이클", eng:"Content Lifecycle", cat:"ugc",
+  desc:"UGC 콘텐츠가 생성 → 노출 → 소비 → 소멸되는 과정입니다. 인기 콘텐츠는 피처드(추천)에 올라가 수명이 연장되고, 오래된 콘텐츠는 알고리즘에서 밀려납니다.",
+  analogy:"식품 유통기한이에요. 신선한 콘텐츠는 잘 팔리지만, 시간이 지날수록 소비되거나 버려집니다. 플랫폼은 항상 신선한 콘텐츠를 공급받아야 합니다." },
+
+/* ──────────────── 개발 / 기술 ──────────────── */
+{ term:"SDK", eng:"Software Development Kit", cat:"tech",
+  desc:"특정 플랫폼이나 서비스와 연동하기 위해 제공하는 개발 도구 모음입니다. 라이브러리, 샘플 코드, 문서, 디버깅 도구가 포함됩니다. Unity SDK, 결제 SDK 등이 있습니다.",
+  analogy:"이케아 조립 세트예요. 가구(기능)를 처음부터 만들 필요 없이, 필요한 부품과 설명서를 묶어서 제공합니다." },
+
+{ term:"클라이언트 / 서버", eng:"Client / Server Architecture", cat:"tech",
+  desc:"요청을 보내는 쪽(클라이언트, 주로 게임 앱)과 처리해 응답하는 쪽(서버)의 구조입니다. 중요한 계산은 서버에서 처리해야 치팅 방지가 가능합니다.",
+  analogy:"식당이에요. 손님(클라이언트)이 주문하면 주방(서버)이 요리해서 내어줍니다. 주방 레시피를 손님에게 보여주지 않는 것처럼, 중요 로직은 서버에 숨깁니다." },
+
+{ term:"레이턴시 / 핑", eng:"Latency / Ping (ms)", cat:"tech",
+  desc:"데이터가 클라이언트에서 서버까지 왕복하는 시간입니다. 숫자가 낮을수록 반응이 빠릅니다. 30ms 이하는 쾌적, 100ms 이상은 느림, 200ms 이상은 플레이 불가 수준입니다.",
+  analogy:"에코(메아리)예요. 소리를 지르고 메아리가 돌아오는 시간이 길수록(레이턴시가 높을수록) 커뮤니케이션 지연이 발생합니다." },
+
+{ term:"빌드 파이프라인", eng:"Build Pipeline / CI", cat:"tech",
+  desc:"소스코드를 실행 가능한 게임 파일로 자동 변환하는 과정입니다. 코드 병합 → 컴파일 → 자동 테스트 → 패키징 순으로 진행됩니다. Jenkins, GitHub Actions 등이 사용됩니다.",
+  analogy:"자동차 조립 라인이에요. 부품(코드)이 들어오면 자동으로 용접·도색·검수를 거쳐 완성차(빌드 파일)가 나오는 자동화 공정입니다." },
+
+{ term:"메모리 릭", eng:"Memory Leak", cat:"tech",
+  desc:"사용이 끝난 메모리가 해제되지 않아 점점 쌓이는 현상입니다. 장시간 플레이 시 게임이 느려지거나 크래시가 발생하는 주요 원인이며, 모바일 환경에서 특히 치명적입니다.",
+  analogy:"수도꼭지 물 낭비예요. 조금씩 새는 물이 쌓여 결국 욕조를 넘치게 합니다. 메모리도 조금씩 누적되다 한계에 달하면 터집니다." },
+
+{ term:"프레임 드롭", eng:"Frame Drop / FPS Drop", cat:"tech",
+  desc:"초당 프레임 수(FPS)가 갑자기 낮아지는 현상입니다. 60FPS를 유지하다 갑자기 15FPS로 떨어지면 화면이 버벅이게 됩니다. 렌더링 최적화와 물리 연산 최적화로 해결합니다.",
+  analogy:"영상 끊김이에요. 유튜브 영상이 와이파이 약할 때 뚝뚝 끊기는 것처럼, 게임도 처리 능력을 초과하면 화면이 버벅입니다." },
+
+{ term:"동기화 (Sync)", eng:"Synchronization / State Sync", cat:"tech",
+  desc:"멀티플레이어 게임에서 모든 플레이어의 게임 상태를 일치시키는 것입니다. 서버 권위 방식(Server Authoritative)과 클라이언트 예측(Client Prediction)을 조합해 구현합니다.",
+  analogy:"합창 지휘자예요. 각자 다른 악기를 연주하지만 지휘자의 박자에 맞춰 같은 곡을 연주하듯, 서버가 모든 클라이언트의 상태를 통일합니다." },
+
+{ term:"체크섬 / 해시", eng:"Checksum / Hash", cat:"tech",
+  desc:"데이터가 손상되거나 변조되지 않았는지 확인하기 위한 검증 값입니다. 같은 파일이면 항상 같은 해시값이 나와, 파일 무결성과 위변조 여부를 빠르게 확인할 수 있습니다.",
+  analogy:"지문이에요. 사람마다 지문이 다르듯, 파일마다 고유한 해시값이 있습니다. 파일이 조금이라도 바뀌면 지문이 완전히 달라집니다." },
+
+{ term:"웹훅 (Webhook)", eng:"Webhook", cat:"tech",
+  desc:"특정 이벤트가 발생했을 때 서버가 지정된 URL로 자동으로 데이터를 전송하는 방식입니다. 주기적으로 데이터를 가져오는 폴링(Polling)과 달리, 이벤트 발생 시에만 동작합니다.",
+  analogy:"택배 도착 알림 문자예요. 배송 상태를 계속 확인하러 들어가는 게(폴링) 아니라, 도착하면 자동으로 알려주는(웹훅) 방식입니다." },
+
+{ term:"스테이징 환경", eng:"Staging / Dev / Prod Environment", cat:"tech",
+  desc:"개발(Dev) → 테스트/스테이징(Staging) → 운영(Production) 단계로 나뉜 배포 환경입니다. 실제 서비스에 영향을 주지 않고 새 기능을 테스트하는 안전망입니다.",
+  analogy:"요리 시연대예요. 실제 손님 식탁(운영)에 내보내기 전, 주방 시연대(스테이징)에서 먼저 맛과 플레이팅을 점검합니다." },
+
+{ term:"모니터링 / 알럿", eng:"Monitoring / Alert / On-call", cat:"tech",
+  desc:"서버, 게임 지표, 에러율을 실시간으로 추적하고, 임계값 초과 시 담당자에게 알림을 보내는 시스템입니다. Sentry, Datadog, Grafana 등이 대표적입니다.",
+  analogy:"병원 중환자실 모니터예요. 환자의 심박수, 혈압, 산소포화도를 실시간으로 추적하고, 이상 수치가 나오면 경보가 울립니다." },
+
+/* ──────────────── 모바일 프로세스 ──────────────── */
+{ term:"APK / IPA", eng:"Android Package / iOS App Archive", cat:"mobile",
+  desc:"각 플랫폼의 앱 배포 파일 형식입니다. APK는 Android 설치 파일, IPA는 iOS 설치 파일입니다. 스토어 제출 시 APK 대신 AAB(Android App Bundle) 형식이 권장되며, IPA는 Xcode에서 Archive로 생성합니다.",
+  analogy:"플랫폼별 포장 규격이에요. 같은 제품(앱)이라도 마트(구글플레이)와 백화점(앱스토어)에 납품하는 박스 규격이 다른 것처럼, 제출 파일 형식도 다릅니다." },
+
+{ term:"코드 사이닝", eng:"Code Signing / Certificate", cat:"mobile",
+  desc:"앱이 신뢰할 수 있는 개발자로부터 왔으며 위변조되지 않았음을 증명하는 디지털 서명입니다. iOS는 Apple 인증서, Android는 키스토어(keystore)로 서명합니다. 인증서 만료나 분실은 심각한 배포 장애로 이어집니다.",
+  analogy:"공식 도장(인감)이에요. 문서에 공인된 도장이 없으면 효력이 없듯, 서명되지 않은 앱은 스토어에 올라가지 못하고 디바이스에서도 실행되지 않습니다." },
+
+{ term:"프로비저닝 프로파일", eng:"Provisioning Profile (iOS)", cat:"mobile",
+  desc:"iOS 앱 배포 권한을 명시한 파일입니다. 어떤 앱(Bundle ID)이 어떤 기기에서 어떤 인증서로 실행될 수 있는지 정의합니다. Development, Ad Hoc, App Store Distribution 세 가지 유형이 있습니다.",
+  analogy:"출입 권한 배지예요. '이 배지(프로파일)를 가진 사람(앱)만 이 건물(기기/스토어)에 들어올 수 있다'는 규칙을 담은 출입 허가증입니다." },
+
+{ term:"번들 ID / 패키지명", eng:"Bundle ID (iOS) / Package Name (Android)", cat:"mobile",
+  desc:"앱을 전 세계적으로 고유하게 식별하는 문자열입니다. 보통 역도메인 형식(com.company.appname)으로 작성합니다. 한번 스토어에 등록하면 변경이 불가능하고, 변경 시 신규 앱으로 취급됩니다.",
+  analogy:"주민등록번호예요. 이름(앱 이름)은 바꿀 수 있어도, 고유 식별자(번들 ID)는 평생 바꿀 수 없습니다." },
+
+{ term:"버전 / 빌드 번호", eng:"Version Name / Build Number", cat:"mobile",
+  desc:"버전명(1.2.3)은 유저에게 보이는 마케팅용 버전이고, 빌드 번호는 스토어에 올릴 때마다 증가하는 내부 식별자입니다. 같은 버전명이라도 빌드 번호가 다르면 별도 제출로 처리됩니다.",
+  analogy:"책의 판(판본)과 쇄(인쇄 회차)예요. '3판 5쇄'처럼, 버전명은 '몇 판'이고 빌드 번호는 '몇 번 인쇄했는지'입니다." },
+
+{ term:"TestFlight / 내부 테스트 트랙", eng:"TestFlight (iOS) / Internal Test Track (Android)", cat:"mobile",
+  desc:"정식 출시 전 내부 테스터에게 앱을 배포하는 베타 테스트 플랫폼입니다. iOS는 TestFlight로 최대 10,000명에게 배포 가능하고, Android는 Google Play Console의 내부/비공개/공개 테스트 트랙을 단계적으로 활용합니다.",
+  analogy:"사전 시사회예요. 일반 관객(정식 출시) 전에 관계자와 평론가(내부 테스터)에게 먼저 보여주고 반응을 확인합니다." },
+
+{ term:"강제 업데이트", eng:"Force Update / Mandatory Update", cat:"mobile",
+  desc:"구버전 앱 사용자가 앱을 실행하면 업데이트를 강제하는 기능입니다. 보안 취약점 패치, 서버 API 호환성 이슈, 중요 버그 수정 시 사용합니다. 선택 업데이트(Optional Update)와 구분해 운영합니다.",
+  analogy:"만료된 티켓이에요. 유효기간이 지난 티켓으로는 입장이 불가능하듯, 구버전 앱은 서버 입장을 막고 업데이트를 요구합니다." },
+
+{ term:"OTA 업데이트 / 리소스 패치", eng:"OTA Update / Hot Update / Resource Patch", cat:"mobile",
+  desc:"스토어 심사 없이 서버에서 앱의 리소스(이미지, 텍스트, 설정값 등)를 교체하는 방식입니다. 코드 변경은 불가능하며 Apple 정책상 실행 가능한 코드를 OTA로 배포하면 리젝 사유가 됩니다.",
+  analogy:"편의점 상품 교체예요. 건물 구조(앱 코드)는 공사 허가(심사)가 필요하지만, 진열 상품(리소스)은 허가 없이 바꿀 수 있습니다." },
+
+{ term:"딥링크", eng:"Deep Link / Universal Link / App Scheme", cat:"mobile",
+  desc:"URL을 통해 앱의 특정 화면으로 직접 이동시키는 기능입니다. 앱이 설치된 경우 앱 내부로, 미설치 시 스토어로 이동시킵니다. 푸시 알림, 마케팅 링크, 웹-앱 연동에 활용됩니다.",
+  analogy:"엘리베이터 층수 버튼이에요. 건물 입구(앱 메인)를 거치지 않고 원하는 층(특정 화면)으로 바로 이동합니다." },
+
+{ term:"푸시 알림", eng:"Push Notification / FCM / APNs", cat:"mobile",
+  desc:"서버에서 디바이스로 메시지를 전송하는 기능입니다. Android는 FCM(Firebase Cloud Messaging), iOS는 APNs(Apple Push Notification Service)를 사용합니다. 유저 동의 없이는 전송이 불가능하며 허용률 관리가 중요합니다.",
+  analogy:"알림 문자예요. 앱이 닫혀 있어도 서버가 디바이스에 직접 메시지를 보낼 수 있습니다. 단, 수신 동의한 번호(디바이스)에만 발송됩니다." },
+
+{ term:"ASO", eng:"App Store Optimization", cat:"mobile",
+  desc:"앱 스토어 검색 결과와 노출 순위를 높이기 위한 최적화 작업입니다. 앱 이름, 키워드, 설명, 스크린샷, 평점이 주요 요소입니다. 웹의 SEO와 같은 개념입니다.",
+  analogy:"가게 간판과 쇼윈도예요. 아무리 좋은 상품(앱)이라도 눈에 띄지 않으면 팔리지 않습니다. 간판(앱 이름·아이콘)과 쇼윈도(스크린샷)를 잘 꾸며야 발견됩니다." },
+
+{ term:"최소 지원 OS 버전", eng:"Minimum SDK / Minimum iOS Version", cat:"mobile",
+  desc:"앱이 지원하는 가장 낮은 OS 버전입니다. Android는 minSdkVersion, iOS는 Deployment Target으로 설정합니다. 낮출수록 지원 기기가 늘지만 구형 API 호환성 처리 비용이 증가합니다.",
+  analogy:"식당의 연령 제한이에요. '만 19세 이상'처럼 기준을 낮추면 손님(기기)이 늘지만, 미성년자 관련 규정(구형 OS 대응)도 별도로 챙겨야 합니다." },
+
+/* ──────────────── 라이브 운영 ──────────────── */
+{ term:"라이브 운영 (LiveOps)", eng:"Live Operations / Live Service Management", cat:"live",
+  desc:"게임 출시 이후 서비스를 유지·운영하는 모든 활동을 말합니다. 콘텐츠 업데이트, 이벤트 기획·집행, 서버 점검, CS 대응, 지표 분석, 어뷰징 제재까지 포함합니다. 출시는 끝이 아니라 시작입니다.",
+  analogy:"식당 오픈 이후의 일상이에요. 개업(출시)보다 매일의 식재료 관리, 서비스, 청소, 단골 관리(운영)가 장기 생존을 결정합니다." },
+
+{ term:"정기 점검", eng:"Scheduled Maintenance", cat:"live",
+  desc:"서버 업데이트, 패치 적용, DB 작업 등을 위해 사전 공지 후 서비스를 일시 중단하는 작업입니다. 보통 새벽 시간대에 진행하며, 점검 시간은 공지에 명시됩니다. 점검 중 보상 지급이 관행입니다.",
+  analogy:"백화점 정기 휴무예요. 사전에 날짜를 공지하고, 그 사이에 재고 정리·리뉴얼 작업을 합니다. 고객은 미리 알고 있으므로 양해가 가능합니다." },
+
+{ term:"긴급 점검", eng:"Emergency Maintenance / Hotfix Deploy", cat:"live",
+  desc:"심각한 버그, 서버 장애, 어뷰징 이슈 등 즉각 대응이 필요한 상황에서 예고 없이 진행하는 점검입니다. 유저 이탈과 불만이 크기 때문에 빠른 복구와 투명한 공지, 충분한 보상이 중요합니다.",
+  analogy:"식당 임시 휴업이에요. 갑작스럽게 문을 닫으면 손님 불만이 생기지만, 식중독(서버 장애)이 발생했다면 어쩔 수 없습니다. 빠른 대응과 진심 어린 사과가 필요합니다." },
+
+{ term:"롤백", eng:"Rollback", cat:"live",
+  desc:"문제가 있는 패치나 배포를 이전 정상 버전으로 되돌리는 작업입니다. 코드 롤백과 DB 롤백으로 나뉘며, DB 롤백은 유저 데이터 손실 위험이 있어 훨씬 신중하게 판단해야 합니다.",
+  analogy:"Ctrl+Z(실행 취소)예요. 잘못된 수정을 했을 때 저장 이전 상태로 되돌리는 것입니다. 단, 다른 사람의 작업이 섞여 있으면 되돌리기가 매우 복잡해집니다." },
+
+{ term:"단계적 배포", eng:"Staged Rollout / Canary Release", cat:"live",
+  desc:"전체 유저에게 한꺼번에 배포하지 않고, 1% → 10% → 50% → 100% 식으로 순차 확대하는 배포 전략입니다. 문제가 발생하면 롤백 범위를 최소화할 수 있습니다.",
+  analogy:"신메뉴 시범 판매예요. 전국 매장에 동시 출시하는 대신, 일부 지역 매장에서 먼저 판매해 반응을 보고 전국 확대 여부를 결정합니다." },
+
+{ term:"인시던트 대응", eng:"Incident Response / War Room", cat:"live",
+  desc:"서비스 장애 발생 시 원인 파악, 영향 범위 분석, 복구, 공지, 보상까지 전체 대응 흐름을 말합니다. 심각도(Severity)에 따라 S1~S4로 분류하고, S1은 즉각 전사 대응 체계가 가동됩니다.",
+  analogy:"소방 출동이에요. 화재 신고(장애 감지) → 출동(대응팀 소집) → 진화(복구) → 현장 조사(원인 분석) → 보고서 작성(포스트모템) 순서로 진행됩니다." },
+
+{ term:"포스트모템", eng:"Post-mortem / Incident Review", cat:"live",
+  desc:"장애나 인시던트 종료 후 원인·타임라인·대응 과정·재발 방지책을 정리한 회고 문서입니다. 책임자를 찾는 자리가 아니라 시스템을 개선하는 것이 목적입니다.",
+  analogy:"항공 사고 조사 보고서예요. '누가 잘못했나'를 추궁하는 게 아니라, '어떤 구조적 문제가 있었고 앞으로 어떻게 막을까'를 분석합니다." },
+
+{ term:"패치노트", eng:"Patch Notes / Release Notes", cat:"live",
+  desc:"업데이트로 변경된 내용을 유저에게 공개하는 문서입니다. 신규 콘텐츠, 버그 수정, 밸런스 조정, 삭제 항목 등을 포함합니다. 잘 쓴 패치노트는 유저 기대감을 높이고 CS 문의를 줄입니다.",
+  analogy:"제품 업데이트 안내 메일이에요. 앱이 바뀌었을 때 '뭐가 달라졌는지' 명확히 알려주지 않으면 유저는 버그인지 기획인지 구분 못하고 CS에 문의합니다." },
+
+{ term:"라이브 이벤트", eng:"Live Event / In-game Event", cat:"live",
+  desc:"한정 기간 동안 운영되는 게임 내 특별 콘텐츠입니다. 리텐션 유지와 매출 견인을 위해 정기·비정기적으로 진행합니다. 기획 → 개발 → QA → 설정값 입력 → 오픈 → 종료 처리까지 PM이 전체 일정을 관리합니다.",
+  analogy:"백화점 시즌 세일이에요. 정해진 기간에만 할인이 있어 긴박감을 주고, 준비부터 종료까지 촘촘한 일정 관리가 필요합니다." },
+
+{ term:"어뷰징 / 어뷰저 대응", eng:"Abuse / Exploit / Anti-cheat Response", cat:"live",
+  desc:"게임 시스템의 허점을 이용해 비정상적인 이득을 취하는 행위(어뷰징)와 이를 탐지·제재하는 프로세스입니다. 발견 즉시 긴급 점검·롤백 여부를 판단하고, 제재 수위(경고/정지/영구 정지)를 결정합니다.",
+  analogy:"은행 이상 거래 탐지예요. 정상 패턴을 벗어난 거래를 감지하고, 계좌를 동결하거나 거래를 취소하는 과정과 동일합니다." },
+
+{ term:"CS 에스컬레이션", eng:"CS Escalation / Customer Support", cat:"live",
+  desc:"고객 문의가 1차 CS(FAQ·매크로 대응) 수준을 넘어 개발팀·운영팀·법무팀 검토가 필요한 수준으로 올라오는 것입니다. 이슈 유형별 에스컬레이션 기준과 담당자를 사전에 정해두어야 합니다.",
+  analogy:"콜센터 상담원 → 팀장 → 본사 이관이에요. 상담원이 해결 못하면 팀장이, 팀장도 안 되면 본사로 올라가는 단계별 대응 구조입니다." },
+
+{ term:"서버 스케일링", eng:"Server Scaling / Auto-scaling", cat:"live",
+  desc:"트래픽 변화에 맞춰 서버 자원을 늘리거나 줄이는 것입니다. 수평 확장(서버 대수 증가)과 수직 확장(서버 사양 업그레이드)이 있으며, 오픈·이벤트·방송 노출 전 선제적 증설이 필요합니다.",
+  analogy:"콘서트장 입장 게이트예요. 평소엔 2개 게이트만 열다가, 공연 시작 직전 10개로 늘려 대기 줄을 분산합니다. 끝나면 다시 줄입니다." },
+
+{ term:"SLA / 가용성", eng:"SLA / Service Level Agreement / Uptime", cat:"live",
+  desc:"서비스가 정상 운영되어야 하는 수준을 수치로 정한 약속입니다. 99.9% 가용성(Three Nines)은 연간 약 8.7시간의 다운타임을 허용합니다. 99.99%(Four Nines)는 연 52분 수준입니다.",
+  analogy:"배달 시간 보장이에요. '30분 내 배달 보장'처럼, 서비스도 '1년 중 몇 시간 이상 장애 없이 운영한다'는 기준을 수치로 약속합니다." },
+
+/* ──────────────── 사업 PM ──────────────── */
+{ term:"NDA", eng:"Non-Disclosure Agreement / 비밀유지계약", cat:"biz",
+  desc:"계약 당사자 간에 공유되는 정보를 외부에 공개하지 않겠다는 계약입니다. 퍼블리셔 미팅, IP 협의, M&A 논의 전 필수로 체결합니다. 단방향(일방)과 양방향(상호) NDA가 있으며, 유효 기간과 범위를 반드시 확인해야 합니다.",
+  analogy:"입단속 각서예요. '오늘 나눈 얘기는 밖에서 하면 안 된다'는 걸 법적으로 묶어두는 것입니다. 사인 전엔 민감한 정보를 공유하지 않는 게 원칙입니다." },
+
+{ term:"MOU / LOI", eng:"Memorandum of Understanding / Letter of Intent", cat:"biz",
+  desc:"본 계약 체결 전 협력 의향을 확인하는 문서입니다. MOU(양해각서)는 협력 범위와 방향을, LOI(의향서)는 구체적 거래 조건의 의향을 담습니다. 법적 구속력은 약하지만 협상 진도를 공식화하는 역할을 합니다.",
+  analogy:"청혼이에요. 결혼(본계약) 전에 '우리 같이 가기로 한 거 맞지?'를 공식적으로 확인하는 단계입니다. 파혼(파기)이 가능하지만 관계에는 영향을 줍니다." },
+
+{ term:"퍼블리싱 계약", eng:"Publishing Agreement / Distribution Deal", cat:"biz",
+  desc:"개발사와 퍼블리셔 간의 역할·비용·수익 배분·IP 귀속을 규정하는 핵심 계약입니다. 선급금(Advance), 마케팅 비용 분담, 매출 정산 기준, 계약 종료 조건 등이 주요 협상 포인트입니다.",
+  analogy:"음반 계약이에요. 아티스트(개발사)가 음악을 만들고, 음반사(퍼블리셔)가 유통·홍보를 담당하는 대신 수익을 나눕니다. 계약 조건에 따라 IP 소유권이 달라집니다." },
+
+{ term:"수익 배분 / Rev Share", eng:"Revenue Share", cat:"biz",
+  desc:"퍼블리셔·플랫폼·개발사 간 매출을 나누는 비율입니다. 플랫폼 수수료 차감 후의 순매출(Net Revenue)을 기준으로 하는지, 총매출(Gross Revenue) 기준인지가 중요합니다. 선급금 회수 전후로 비율이 달라지는 구조도 흔합니다.",
+  analogy:"배달 앱 수수료 구조예요. 주문 금액(총매출)에서 배달비·중개 수수료(플랫폼 컷)를 빼고, 남은 금액을 음식점(개발사)과 브랜드사(퍼블리셔)가 나누는 구조입니다." },
+
+{ term:"플랫폼 수수료", eng:"Platform Fee / Store Cut", cat:"biz",
+  desc:"앱스토어, 구글플레이, 스팀 등 스토어가 인앱 결제 매출에서 가져가는 수수료입니다. 기본 30%이나, 연 매출 100만 달러 이하 소규모 개발사는 15%를 적용하는 인하 프로그램이 있습니다. 실제 정산 매출 계산 시 반드시 차감해야 합니다.",
+  analogy:"입점 수수료예요. 백화점(스토어)에 입점하면 매출의 일정 %를 수수료로 내야 합니다. 백화점 브랜드가 좋을수록 수수료도 높습니다." },
+
+{ term:"IP 라이센싱", eng:"IP Licensing / Intellectual Property", cat:"biz",
+  desc:"게임, 캐릭터, 스토리 등 지식재산권을 타사에 사용 허락하거나 타사 IP를 활용하는 계약입니다. 로열티 방식(매출 %지급)과 고정금 방식이 있으며, 허용 범위(지역·매체·기간)를 명확히 해야 합니다.",
+  analogy:"가맹 계약이에요. 프랜차이즈 본사(IP 보유자)가 가맹점(라이센시)에게 브랜드 사용권을 주고 로열티를 받는 구조입니다. 계약 범위 밖의 사용은 침해입니다." },
+
+{ term:"BM / 비즈니스 모델", eng:"Business Model / Monetization Strategy", cat:"biz",
+  desc:"게임으로 수익을 창출하는 구조입니다. F2P(무료+인앱결제), B2P(패키지 구매), 구독형, 광고형으로 나뉩니다. 타깃 시장·장르·경쟁 환경에 따라 최적 BM이 달라지므로 초기 기획 단계부터 설계가 필요합니다.",
+  analogy:"식당 운영 방식이에요. 코스요리 정가(B2P), 뷔페(구독), 기본식 무료+사이드 유료(F2P), 광고로 운영하는 무료 급식소(광고형). 어느 모델이 맞냐는 손님과 위치에 따라 다릅니다." },
+
+{ term:"UA / 유저 획득", eng:"User Acquisition / UA", cat:"biz",
+  desc:"광고, 제휴, 프로모션을 통해 신규 유저를 유입시키는 마케팅 활동입니다. 메타, 구글 UAC, 애플 서치 애즈 등 채널별 효율을 CPI·ROAS로 측정하고 예산을 배분합니다.",
+  analogy:"신규 고객 유치 영업이에요. 어떤 채널(전단지·SNS·TV)에서 얼마짜리 고객이 얼마나 오는지를 분석해 광고비를 최적 배분합니다." },
+
+{ term:"CPI / LTV", eng:"Cost Per Install / Lifetime Value", cat:"biz",
+  desc:"CPI는 유저 1명을 설치로 유도하는 데 드는 비용, LTV는 유저 1명이 서비스 이용 기간 동안 발생시키는 총 매출 예측값입니다. LTV > CPI여야 흑자 구조이며, 장르·타깃·시장마다 기준값이 크게 다릅니다.",
+  analogy:"고객 유치 비용 대비 고객 가치예요. 손님 한 명 끌어오는 광고비(CPI)보다 그 손님이 평생 쓰는 돈(LTV)이 많아야 장사가 됩니다." },
+
+{ term:"ROAS", eng:"Return On Ad Spend / 광고 수익률", cat:"biz",
+  desc:"광고비 대비 발생한 매출 비율입니다. ROAS 200%는 광고비 100만 원으로 매출 200만 원을 올렸다는 의미입니다. 손익분기점 ROAS를 계산한 뒤 캠페인별 목표 ROAS를 설정합니다.",
+  analogy:"낚시 투자 수익이에요. 미끼(광고비) 1만 원어치 쓰고 물고기(매출)를 얼마나 잡았는지를 보는 지표입니다. 미끼값보다 물고기 값이 많아야 남는 장사입니다." },
+
+{ term:"로컬라이제이션", eng:"Localization / L10n", cat:"biz",
+  desc:"게임의 텍스트·UI·사운드·문화적 요소를 현지 시장에 맞게 변환하는 작업입니다. 단순 번역(Translation)을 넘어 현지 정서·법규·플랫폼 규정에 맞게 조정하는 것이 포인트입니다. L10n은 Localization의 약어(L+10글자+n)입니다.",
+  analogy:"현지화 메뉴 개발이에요. 맥도날드가 인도에선 소고기 버거 대신 채소 버거를 파는 것처럼, 단순 번역이 아니라 현지 문화에 맞게 콘텐츠를 재설계합니다." },
+
+{ term:"LQA", eng:"Localization QA / 현지화 품질 검수", cat:"biz",
+  desc:"현지화된 텍스트의 번역 품질, UI 잘림(text overflow), 미번역 항목, 문화적 부적절 표현 등을 전문 검수자가 확인하는 과정입니다. 스토어 심사 전 완료되어야 하며, 언어별 일정이 개발 일정에 반영되어야 합니다.",
+  analogy:"외국어 교정 편집이에요. 번역가가 옮긴 원고를, 현지 원어민 편집자가 자연스러운지·오탈자는 없는지 최종 검토하는 단계입니다." },
+
+{ term:"등급 심사 / 게임 심의", eng:"Game Rating / GRAC / PEGI / ESRB", cat:"biz",
+  desc:"게임 출시 전 연령 등급을 받는 절차입니다. 한국은 게임물관리위원회(GRAC), 유럽은 PEGI, 북미는 ESRB가 담당합니다. 등급에 따라 마케팅 제한·스토어 등록 가능 여부가 달라지고, 심의 기간(한국 2~4주)을 일정에 반드시 포함해야 합니다.",
+  analogy:"영화 상영 등급이에요. 15세 관람가·청불처럼, 게임도 어떤 연령층에 판매 가능한지 국가별 기관이 심사합니다. 등급 없이는 스토어에 올릴 수 없습니다." },
+
+{ term:"글로벌 론칭 전략", eng:"Global Launch / Territory Strategy", cat:"biz",
+  desc:"어느 시장에, 어떤 순서로, 어떤 BM과 현지화 수준으로 출시할지를 결정하는 전략입니다. 소프트 런치 → 지역 순차 출시 → 글로벌 동시 출시 중 선택하며, 시장별 등급 심사·결제 인프라·현지 파트너 확보가 선행됩니다.",
+  analogy:"해외 진출 전략이에요. 무작정 전 세계에 동시에 매장을 여는 것보다, 한 도시에서 테스트하고 반응이 좋으면 인근 도시로 확장하는 것이 리스크를 줄입니다." },
+
+/* ── game 추가 ── */
+{ term:"CBT / OBT", eng:"Closed Beta Test / Open Beta Test", cat:"game",
+  desc:"CBT는 선별된 일부 유저에게만 공개하는 비공개 베타 테스트, OBT는 누구나 참여 가능한 공개 베타 테스트입니다. CBT → OBT → 정식 출시 순서로 진행하며, CBT 피드백을 반영해 OBT 빌드를 준비합니다.",
+  analogy:"영화 시사회 vs 일반 상영이에요. 시사회(CBT)는 초대받은 사람만, 일반 개봉(OBT)은 누구나 볼 수 있습니다. 시사회 반응을 보고 편집을 한 번 더 다듬습니다." },
+
+{ term:"FGT", eng:"Focus Group Test / 사내 포커스 그룹 테스트", cat:"game",
+  desc:"정식 테스트 이전에 사내 임직원 또는 소규모 내부 그룹이 게임을 플레이하며 초기 반응·UX·밸런스를 점검하는 테스트입니다. CBT보다 앞선 단계에서 빠르게 피드백을 수집할 수 있습니다.",
+  analogy:"맛보기 시식 행사예요. 정식 출시(CBT/OBT) 전에 직원들이 먼저 먹어보고 '이 맛 이상한데?'를 걸러내는 단계입니다." },
+
+/* ── ugc 추가 ── */
+{ term:"GaaP", eng:"Game as a Platform", cat:"ugc",
+  desc:"게임 자체가 하나의 플랫폼으로 기능하는 개념입니다. 유저가 콘텐츠를 소비하는 것을 넘어 창작하고 공유·유통하는 생태계를 게임 안에 구축합니다. 로블록스, 포트나이트 크리에이티브, 버블리즈가 이 방향을 지향합니다.",
+  analogy:"유튜브가 된 게임이에요. 처음엔 영상 보는 곳(게임 플레이)이었는데, 이제 누구나 영상을 올리고(UGC) 수익도 내는(크리에이터 이코노미) 플랫폼이 된 구조입니다." },
+
+/* ── tech 추가 ── */
+{ term:"SVN", eng:"Subversion / SVN", cat:"tech",
+  desc:"중앙 서버에 모든 버전 이력을 저장하는 중앙집중형 버전 관리 시스템입니다. Git이 분산형인 반면 SVN은 서버 의존도가 높습니다. 게임 업계에서는 대용량 에셋 관리에 SVN을 유지하는 경우가 많습니다.",
+  analogy:"공용 Google Drive예요. 파일을 수정하면 서버에 바로 반영됩니다. 인터넷이 없으면 작업이 어렵고, 누군가 같은 파일을 동시에 수정하면 충돌이 납니다." },
+
+{ term:"Bearer Token / 401", eng:"Bearer Token / 401 Unauthorized", cat:"tech",
+  desc:"API 요청 시 인증 헤더(Authorization: Bearer {token})에 담아 보내는 접근 토큰입니다. 토큰이 만료되면 서버는 401 Unauthorized를 반환합니다. 게임 서버 연동에서 401은 '토큰 만료'가 가장 흔한 원인입니다.",
+  analogy:"출입 배지예요. 유효기간이 지난 배지를 찍으면 '접근 불가(401)'가 뜹니다. 재발급(토큰 리프레시) 없이는 어떤 문도 열리지 않습니다." },
+
+{ term:"API Gateway / Kong", eng:"API Gateway / Kong Gateway", cat:"tech",
+  desc:"클라이언트와 백엔드 서비스 사이에서 인증, 라우팅, 로드밸런싱, 로깅을 처리하는 중간 관문입니다. Kong은 게임 업계에서 많이 쓰이는 오픈소스 API Gateway입니다. 'devqa2 환경 Kong 통해서 401 났다'는 식으로 실무에서 자주 언급됩니다.",
+  analogy:"건물 로비 안내 데스크예요. 방문자(API 요청)가 들어오면 신분 확인(인증), 목적층 안내(라우팅), 방문자 기록(로깅)을 처리한 뒤 내부로 통과시킵니다." },
+
+/* ──────────────── 협업 툴 ──────────────── */
+{ term:"Jira", eng:"Jira / Issue Tracker", cat:"tools",
+  desc:"Atlassian이 만든 이슈 추적 및 프로젝트 관리 도구입니다. 버그, 기능, 태스크를 이슈로 등록하고 담당자·상태·우선순위를 관리합니다. Cloud 버전(atlassian.net)과 Server/Data Center 버전(사내 도메인)이 있습니다.",
+  analogy:"디지털 할 일 게시판이에요. 스티커 메모지(이슈)에 담당자, 마감일, 상태를 붙여두고 팀 전체가 보는 구조입니다. 직접 가서 보지 않아도 누가 뭘 하는지 한눈에 보입니다." },
+
+{ term:"JQL", eng:"Jira Query Language", cat:"tools",
+  desc:"Jira에서 이슈를 검색·필터링하는 쿼리 언어입니다. SQL과 유사한 문법으로 복잡한 조건 검색이 가능합니다. 예: `project = BBZG AND status CHANGED TO Done DURING (startOfWeek(-1), endOfWeek())`",
+  analogy:"엑셀 고급 필터예요. '담당자가 나고, 이번 주에 완료된, 버그 타입 이슈'처럼 복잡한 조건을 한 줄로 표현할 수 있습니다." },
+
+{ term:"Jira Automation", eng:"Jira Automation / 자동화 규칙", cat:"tools",
+  desc:"특정 트리거(이슈 생성, 상태 변경, 날짜 도달 등) 발생 시 자동으로 액션(알림, 이슈 생성, 필드 업데이트)을 실행하는 기능입니다. 코드 없이 규칙 형태로 설정하며, 반복 업무 자동화에 유용합니다.",
+  analogy:"자동 응답 메일이에요. '문의 접수 시 자동으로 확인 메일 발송'처럼, Jira도 '이슈 생성되면 자동으로 담당자 지정+슬랙 알림' 같은 규칙을 설정할 수 있습니다." },
+
+{ term:"Confluence", eng:"Confluence / Wiki", cat:"tools",
+  desc:"Atlassian의 팀 위키·문서 협업 도구입니다. Jira와 연동해 이슈 목록을 문서에 임베드하거나, 회의록·기획서·스펙 문서를 공유합니다. Storage Format(XML 기반)으로 복잡한 레이아웃도 직접 구현할 수 있습니다.",
+  analogy:"팀 공용 노트예요. 누구나 쓰고 편집하고 댓글을 달 수 있으며, 수정 이력이 남아 언제 누가 뭘 바꿨는지 추적이 가능합니다." },
+
+{ term:"Sentry", eng:"Sentry / Error Monitoring", cat:"tools",
+  desc:"앱에서 발생하는 에러·크래시를 실시간으로 수집·분류·알림하는 모니터링 도구입니다. DSN(Data Source Name)을 앱에 심으면 예외 발생 시 자동으로 Sentry에 리포트됩니다. 에러별 빈도·영향 유저 수·스택 트레이스를 확인할 수 있습니다.",
+  analogy:"CCTV + 자동 신고 시스템이에요. 앱에서 뭔가 터지면 자동으로 영상(스택 트레이스)을 찍어서 관제센터(Sentry)에 전송하고, 심각도에 따라 담당자에게 알림이 갑니다." },
+
+{ term:"DSN", eng:"Data Source Name / Sentry DSN", cat:"tools",
+  desc:"Sentry 프로젝트와 앱을 연결하는 고유 식별 URL입니다. 클라이언트 코드에 DSN을 설정해야 에러 로그가 해당 Sentry 프로젝트로 전송됩니다. 환경(dev/staging/production)별로 별도 DSN을 사용하는 것이 권장됩니다.",
+  analogy:"우편 주소예요. 어느 우체통(앱)에서 편지(에러 로그)를 보내든, DSN에 적힌 주소(Sentry 프로젝트)로 정확히 배달됩니다." },
+
+{ term:"MCP", eng:"Model Context Protocol", cat:"tools",
+  desc:"AI(LLM)가 외부 도구·데이터베이스·서비스와 표준화된 방식으로 연동하기 위한 프로토콜입니다. Claude Desktop에서 사내 Jira/Confluence에 접근하거나, 캘린더·메일·슬랙을 AI가 직접 조작하는 것이 MCP 방식으로 동작합니다.",
+  analogy:"USB 규격이에요. 다양한 기기를 하나의 규격(USB)으로 연결하듯, MCP는 AI가 다양한 도구를 하나의 표준으로 연결합니다. MCP 서버를 만들면 AI가 그 도구를 쓸 수 있게 됩니다." },
+
+{ term:"PAT", eng:"Personal Access Token / 개인 접근 토큰", cat:"tools",
+  desc:"사용자 계정의 비밀번호 대신 API 인증에 사용하는 개인 발급 토큰입니다. Jira, GitHub, Confluence 등에서 API 호출 시 사용합니다. 범위(scope)와 만료일을 설정할 수 있으며, 유출 시 즉시 폐기해야 합니다.",
+  analogy:"마스터키 대신 사용하는 보조키예요. 본인 계정(마스터키)은 숨기고, API 호출용으로만 쓰는 별도 열쇠를 만드는 개념입니다. 잃어버려도 그 키만 폐기하면 됩니다." },
+
+{ term:"Smart Commits", eng:"Smart Commits / SVN·Git → Jira 연동", cat:"tools",
+  desc:"SVN이나 Git 커밋 메시지에 Jira 이슈 키를 포함하면, 커밋이 해당 Jira 이슈에 자동으로 연결되는 기능입니다. `BBZG-123 #comment 작업 완료 #resolve` 형식으로 댓글 추가, 상태 변경, 시간 기록을 자동화할 수 있습니다.",
+  analogy:"영수증 자동 분류예요. 가계부 항목(Jira 이슈)을 명시하고 결제하면(커밋), 해당 항목에 지출이 자동으로 기록되는 구조입니다." },
+
+/* ──────────────── QA ──────────────── */
+{ term:"테스트 케이스 (TC)", eng:"Test Case", cat:"qa",
+  desc:"특정 기능이나 시나리오가 올바르게 동작하는지 검증하기 위한 입력값, 실행 절차, 예상 결과를 정의한 문서입니다. TC가 촘촘할수록 누락 버그가 줄어들지만, 유지보수 비용도 증가합니다.",
+  analogy:"요리 체크리스트예요. '재료 준비 → 굽기 → 플레이팅' 순서대로 확인하면서 각 단계가 예상대로 됐는지 점검합니다." },
+
+{ term:"버그 리포트", eng:"Bug Report / 이슈 리포트", cat:"qa",
+  desc:"발견된 버그를 재현 절차(STR), 실제 결과, 기대 결과, 심각도, 환경 정보와 함께 작성하는 문서입니다. 좋은 버그 리포트는 개발자가 재현하는 데 걸리는 시간을 줄여줍니다.",
+  analogy:"병원 차트예요. '어디가, 어떻게, 언제부터 아픈지'가 명확해야 의사(개발자)가 빠르게 진단할 수 있습니다. '그냥 이상해요'는 치료가 불가능합니다." },
+
+{ term:"STR", eng:"Steps to Reproduce / 재현 절차", cat:"qa",
+  desc:"버그를 재현하기 위한 단계별 절차입니다. 1.앱 실행 → 2.로그인 → 3.특정 버튼 클릭 처럼 누구나 따라할 수 있어야 합니다. STR이 불명확하면 개발자가 'Cannot Reproduce'로 닫아버립니다.",
+  analogy:"범죄 재현 실험이에요. 형사(개발자)가 사건(버그)을 재현하려면 목격자(QA)가 정확한 동선을 설명해야 합니다. '그냥 갑자기 죽었어요'로는 수사가 안 됩니다." },
+
+{ term:"심각도 / 우선순위", eng:"Severity / Priority", cat:"qa",
+  desc:"심각도(Severity)는 버그가 기능에 미치는 영향 크기(Blocker→Critical→Major→Minor→Trivial), 우선순위(Priority)는 수정 순서입니다. 심각도가 높아도 우선순위가 낮을 수 있고, 반대도 가능합니다.",
+  analogy:"병원 응급실 분류예요. 심각도는 상태의 위중함(중증·경증), 우선순위는 치료 순서입니다. 연예인 찰과상(낮은 심각도, 높은 우선순위)이 먼저 처리되는 경우도 있습니다." },
+
+{ term:"블로커", eng:"Blocker / Show-stopper", cat:"qa",
+  desc:"다음 단계 진행을 완전히 막는 버그입니다. 앱 실행 불가, 결제 불가, 로그인 불가 등이 해당됩니다. 블로커가 해소되지 않으면 빌드 진행이나 심사 제출이 불가능합니다.",
+  analogy:"공사 현장 착공 불가 상황이에요. 허가가 안 나오거나, 진입로가 막혀 있거나, 자재가 없으면 다른 공정이 아무리 잘 돼도 전체가 멈춥니다." },
+
+{ term:"회귀 테스트", eng:"Regression Test", cat:"qa",
+  desc:"새로운 코드 변경이 기존에 정상 작동하던 기능을 깨지 않았는지 확인하는 테스트입니다. 패치나 업데이트 후 반드시 수행하며, 자동화 회귀 테스트를 갖출수록 안정적인 라이브 운영이 가능합니다.",
+  analogy:"이사 후 가전제품 점검이에요. 이사(코드 변경) 후 세탁기·냉장고·TV가 다 잘 되는지 하나하나 확인하는 과정입니다. 이전에 됐다고 지금도 된다는 보장이 없습니다." },
+
+{ term:"스모크 테스트", eng:"Smoke Test / 빌드 검증", cat:"qa",
+  desc:"새 빌드를 받았을 때 핵심 기능이 최소한 동작하는지 빠르게 확인하는 1차 검증입니다. '앱 실행 → 로그인 → 메인 화면 진입'처럼 5~10분 내로 통과 여부를 판단합니다. 실패하면 전체 QA 없이 빌드를 반려합니다.",
+  analogy:"자동차 시동 걸기예요. 수리 후 인수하기 전에 일단 시동부터 걸어봅니다. 시동도 안 걸리면 다른 건 확인할 필요가 없습니다." },
+
+{ term:"탐색적 테스트", eng:"Exploratory Testing", cat:"qa",
+  desc:"미리 작성된 TC 없이 테스터가 경험과 직관으로 자유롭게 탐색하며 버그를 발견하는 테스트 방식입니다. TC 기반 테스트에서 놓친 예상 밖의 버그를 찾는 데 효과적입니다.",
+  analogy:"자유 여행이에요. 정해진 일정(TC) 없이 발길 닿는 대로 다니다 보면, 가이드 투어에서는 절대 못 가는 숨은 명소(버그)를 발견합니다." },
+
+{ term:"QA 사이클 / QA 게이트", eng:"QA Cycle / QA Gate", cat:"qa",
+  desc:"개발 단계(개발QA → 스테이징QA → 라이브QA)마다 통과해야 하는 품질 검증 단계입니다. 각 게이트를 통과해야 다음 단계로 이동할 수 있으며, PM은 QA 게이트 일정을 전체 마일스톤에 반영해야 합니다.",
+  analogy:"공항 출국 과정이에요. 체크인 → 수하물 → 보안 검색 → 출국 심사를 순서대로 통과해야 비행기를 탈 수 있습니다. 한 단계를 건너뛸 수 없습니다." },
+
+{ term:"인수 테스트 (UAT)", eng:"User Acceptance Test / UAT", cat:"qa",
+  desc:"실제 사용자 또는 관계자가 기획 요구사항을 기준으로 '이게 맞냐'를 최종 확인하는 테스트입니다. QA팀의 기술 테스트와 달리 비즈니스 요건 충족 여부를 검증하며, 출시 전 마지막 승인 관문입니다.",
+  analogy:"집 인수 점검이에요. 건설사(개발팀)가 QA를 마치고 집을 지었어도, 입주자(클라이언트/기획자)가 직접 들어가 '내가 원하던 대로 됐나'를 확인하는 최종 검수입니다." },
+
+{ term:"재현율", eng:"Reproducibility / 재현 가능성", cat:"qa",
+  desc:"버그를 동일 절차로 반복 재현할 수 있는 비율입니다. 항상 재현(100%)이면 수정이 쉽고, 간헐적 재현(50% 이하)이면 원인 파악이 어려워 우선순위 조정이 필요합니다. '간헐적'은 타이밍, 환경, 데이터 상태가 원인인 경우가 많습니다.",
+  analogy:"이상한 소음이에요. 차에서 항상 나는 소음은 정비소에서 바로 잡을 수 있지만, 가끔 나는 소음은 원인 찾는 것 자체가 일입니다." },
+
+{ term:"테스트 환경 구성", eng:"Test Environment / Dev·QA·Live", cat:"qa",
+  desc:"개발(Dev), QA, 스테이징, 라이브(Prod) 등 목적별로 분리된 서버 환경입니다. 각 환경에 맞는 빌드를 배포하고, QA는 라이브 환경에 직접 테스트하지 않는 것이 원칙입니다. 환경 구성과 유지는 PM이 조율하는 경우가 많습니다.",
+  analogy:"음식점 주방 구역이에요. 레시피 개발 주방(Dev), 손님 내보내기 전 시식 주방(QA/Staging), 실제 영업 주방(Live)으로 나뉘어 있고 섞으면 사고가 납니다." },
+
+/* ──────────────── 엔진 / UaaL ──────────────── */
+{ term:"게임 엔진", eng:"Game Engine / Unity / Unreal", cat:"engine",
+  desc:"게임의 렌더링, 물리, 오디오, 입력 처리 등을 담당하는 개발 프레임워크입니다. Unity(C# 기반, 모바일·인디 강세)와 Unreal Engine(C++ 기반, AAA·고품질 그래픽 강세)이 양대 엔진입니다. 선택에 따라 개발 언어, 툴체인, 라이선스 비용이 달라집니다.",
+  analogy:"건축 공법이에요. 목조(Unity)와 철근콘크리트(Unreal)처럼, 어떤 공법을 쓰느냐에 따라 시공 속도·비용·결과물의 성격이 달라집니다. 중간에 바꾸는 건 거의 불가능합니다." },
+
+{ term:"UaaL (Unity as a Library)", eng:"Unity as a Library / UaaL", cat:"engine",
+  desc:"Unity 엔진을 독립 앱이 아닌 기존 네이티브 앱(Swift/Kotlin)에 라이브러리 형태로 내장하는 방식입니다. Unity 2019.3부터 공식 지원하며, 네이티브 앱이 주인이 되고 Unity는 필요 시 호출되는 부품 구조입니다.",
+  analogy:"건물 안에 설치된 쇼룸이에요. 건물 전체를 Unity로 새로 짓는 게 아니라, 기존 건물의 특정 공간에만 Unity 인테리어를 적용하는 구조입니다." },
+
+{ term:"네이티브 앱 아키텍처", eng:"Native App Architecture / Swift / Kotlin", cat:"engine",
+  desc:"iOS는 Swift/Objective-C, Android는 Kotlin/Java로 작성된 플랫폼 최적화 앱 구조입니다. UaaL에서 네이티브 앱이 main()을 소유하고, Unity를 자식 뷰로 호출합니다. 네이티브 코드가 복잡할수록 UaaL 통합 난이도가 올라갑니다.",
+  analogy:"건물 뼈대예요. 철근콘크리트 뼈대(네이티브)가 먼저 세워져 있고, 인테리어(Unity 씬)는 나중에 그 안에 들어갑니다. 뼈대가 비표준이면 인테리어 설치가 까다로워집니다." },
+
+{ term:"브릿지 / 네이티브 바인딩", eng:"Bridge / Native-Unity Binding", cat:"engine",
+  desc:"네이티브 코드(Swift/Kotlin)와 Unity C# 코드가 데이터를 주고받는 통신 레이어입니다. 문자열·숫자 등 단순 타입은 직접 전달되지만, 복잡한 객체는 직렬화가 필요합니다. 브릿지 구간의 버그는 양쪽 어느 팀 책임인지 불명확해 핑퐁이 발생하기 쉽습니다.",
+  analogy:"통역사예요. 한국어(네이티브)와 영어(C#)를 쓰는 두 팀이 대화하려면 중간에 통역사(브릿지)가 필요합니다. 통역 오류가 나면 어느 쪽이 잘못 말했는지 파악하기가 어렵습니다." },
+
+{ term:"앱 생명주기", eng:"App Lifecycle / Activity Lifecycle", cat:"engine",
+  desc:"앱이 실행→포그라운드→백그라운드→종료되는 상태 변화 흐름입니다. UaaL 구조에서는 네이티브 앱의 생명주기와 Unity 런타임의 생명주기를 동시에 관리해야 합니다. 두 생명주기가 충돌하면 크래시나 메모리 누수가 발생합니다.",
+  analogy:"매장 영업 시간 관리예요. 백화점(네이티브 앱) 영업시간과 입점 팝업 매장(Unity)의 운영 시간을 따로 관리해야 하는데, 둘이 엇갈리면 문제가 생깁니다." },
+
+{ term:"AAR / .framework", eng:"Android Archive (.aar) / iOS Framework (.framework)", cat:"engine",
+  desc:"Unity가 UaaL 빌드 시 생성하는 플랫폼별 라이브러리 파일 형식입니다. Android는 .aar, iOS는 .framework로 출력되며, 이 파일을 각각 Android Studio / Xcode 프로젝트에 import해서 네이티브 앱과 연결합니다.",
+  analogy:"부품 패키지예요. Unity 공장에서 만든 부품(AAR/.framework)을 네이티브 앱 조립 라인(Android Studio/Xcode)에 갖다 끼우는 구조입니다." },
+
+{ term:"마켓 임베드 정책", eng:"Market Embedding Policy / Store Guidelines", cat:"engine",
+  desc:"Apple App Store와 Google Play는 네이티브 앱 안에 Unity 런타임을 내장해 게임을 구동하는 UaaL 방식을 허용하지 않습니다. 코드 실행 가능한 엔진을 내부에 숨기는 것은 심사 리젝 사유입니다. 이 제약으로 인해 게임이 메인인 서비스에서 UaaL 선택은 구조적 한계가 있습니다.",
+  analogy:"건물 용도 규제예요. 주거용 건물 안에 공장을 몰래 운영하는 건 허가가 안 되듯, 앱스토어도 앱 내부에 실행 엔진을 숨기는 것을 금지합니다." },
+
+{ term:"Unity 앱 + 콘텐츠 다운로드 구조", eng:"Unity App + Content Download / Roblox Model", cat:"engine",
+  desc:"Unity로 앱 자체를 빌드해 마켓에 등록하고, 게임 콘텐츠(맵, 게임 모드 등)는 서버에서 런타임에 다운받아 실행하는 구조입니다. 마켓 임베드 정책 우회가 가능하고 로블록스가 이 방식을 사용합니다. 콘텐츠 다운로드 관리, 버전 호환, 보안이 추가 과제입니다.",
+  analogy:"앱스토어에는 플레이어(앱)만 설치하고, 음원(콘텐츠)은 스트리밍으로 받아오는 음악 앱이에요. 앱 자체는 얇지만 콘텐츠는 무한히 확장됩니다." },
+
+{ term:"풀스크린 렌더링 제약", eng:"Fullscreen Rendering / UaaL Limitation", cat:"engine",
+  desc:"UaaL에서 Unity 렌더링은 풀스크린 전환만 지원합니다. 화면 일부 영역에만 Unity를 띄우는 것은 공식적으로 지원되지 않습니다. Unity 인스턴스는 동시에 하나만 실행 가능하며, 언로드 상태에서도 Android 약 90MB, iOS 약 110MB의 메모리를 점유합니다.",
+  analogy:"프로젝터 화면이에요. 프로젝터(Unity)는 화면 전체를 가득 채워야만 켤 수 있고, 화면 한쪽 귀퉁이에만 비추는 건 지원하지 않습니다." },
+
+/* ──────────────── 기존 카테고리 보강 ──────────────── */
+/* game 추가 */
+{ term:"매치메이킹", eng:"Matchmaking", cat:"game",
+  desc:"조건이 맞는 유저들을 자동으로 매칭해 같은 게임 세션에 넣는 시스템입니다. 실력(MMR/ELO), 레이턴시, 대기 시간을 복합적으로 계산해 최적의 매치를 구성합니다.",
+  analogy:"소개팅 앱이에요. 나이·지역·취향을 알고리즘이 분석해 잘 맞을 것 같은 상대를 연결해줍니다. 매치 품질과 대기 시간 사이의 균형이 핵심입니다." },
+
+{ term:"데디케이티드 서버", eng:"Dedicated Server", cat:"game",
+  desc:"게임 전용으로 운영되는 독립 서버입니다. P2P(플레이어 중 한 명이 호스트) 방식과 달리 중립 서버가 모든 플레이어의 판정 기준이 되므로 공정성과 안정성이 높습니다.",
+  analogy:"공공 심판이에요. 선수 중 한 명이 심판을 겸하면(P2P) 편파 판정이 생기지만, 중립 심판(데디케이티드 서버)이 있으면 모두가 같은 기준으로 판정받습니다." },
+
+{ term:"롤백 넷코드", eng:"Rollback Netcode", cat:"game",
+  desc:"네트워크 지연 발생 시 입력을 예측해 게임을 진행하다가, 실제 데이터가 도착하면 과거 상태로 되돌려 재계산하는 방식입니다. 격투 게임 등 반응 속도가 중요한 장르에서 딜레이 기반 넷코드보다 훨씬 자연스러운 플레이를 제공합니다.",
+  analogy:"문자 예측 입력이에요. 스마트폰이 다음 단어를 미리 예측해 보여주다가, 실제로 다른 단어를 입력하면 즉시 교정하는 것처럼 게임도 예측하고 수정합니다." },
+
+{ term:"고래 유저 (Whale)", eng:"Whale User / High-value Spender", cat:"game",
+  desc:"매우 높은 금액을 과금하는 소수의 핵심 유저입니다. 전체 매출의 70~80%를 상위 5% 유저가 만들어내는 구조가 일반적입니다. 고래 유저 이탈은 매출에 즉각적인 타격을 줍니다.",
+  analogy:"VIP 단골이에요. 전체 손님의 5%가 매출의 80%를 만들어내는 식당처럼, 소수의 핵심 고객을 잘 관리하는 것이 사업의 핵심입니다." },
+
+{ term:"싱크 / 파우셋", eng:"Sink / Faucet Economy", cat:"game",
+  desc:"게임 경제에서 재화를 공급하는 경로(파우셋, 수도꼭지)와 소비하는 경로(싱크, 배수구)의 균형을 설계하는 개념입니다. 파우셋이 싱크보다 크면 인플레이션, 반대면 디플레이션이 발생합니다.",
+  analogy:"욕조에 물 채우기예요. 수도꼭지(재화 공급)와 배수구(재화 소비)의 속도가 맞아야 욕조(경제)가 적당히 찹니다. 어느 쪽이 너무 크면 넘치거나 바닥납니다." },
+
+{ term:"월드 빌딩", eng:"World Building / Map Creation", cat:"game",
+  desc:"게임 또는 UGC 플랫폼에서 유저가 맵, 환경, 오브젝트를 직접 배치해 새로운 공간을 만드는 행위입니다. 샌드박스 장르와 UGC 플랫폼의 핵심 창작 활동입니다.",
+  analogy:"레고 조립이에요. 정해진 부품(에셋)으로 자신만의 세계를 설계하는 것입니다. 어떤 부품을 쓸 수 있느냐가 창작의 폭을 결정합니다." },
+
+/* ugc 추가 */
+{ term:"UGC 플라이휠", eng:"UGC Flywheel", cat:"ugc",
+  desc:"UGC 플랫폼의 성장 선순환 구조입니다. 크리에이터가 콘텐츠를 만들면 → 유저가 유입되고 → 수익이 생기면 → 더 많은 크리에이터가 참여하는 자기 강화 루프입니다. 플라이휠이 돌기 시작하면 경쟁자가 따라잡기 어렵습니다.",
+  analogy:"유튜브 성장 공식이에요. 크리에이터가 많아질수록 콘텐츠가 늘고, 콘텐츠가 많아질수록 시청자가 늘고, 시청자가 늘면 광고 수익이 늘고, 수익이 늘면 크리에이터가 더 몰립니다." },
+
+{ term:"트러스트 & 세이프티", eng:"Trust & Safety", cat:"ugc",
+  desc:"플랫폼 내 유해 콘텐츠·악성 유저·불법 행위를 탐지하고 제재하는 정책과 시스템 전체를 말합니다. 신고 접수, 모더레이션 심사, 계정 제재, 항소 프로세스를 포함합니다. UGC 플랫폼 규모가 커질수록 T&S가 핵심 인프라가 됩니다.",
+  analogy:"아파트 관리규약 + 경비 시스템이에요. 규칙(정책)만 있어도 안 되고, 집행 시스템(모더레이션)만 있어도 안 됩니다. 둘이 함께 작동해야 건전한 커뮤니티가 유지됩니다." },
+
+{ term:"크리에이터 파이프라인", eng:"Creator Pipeline", cat:"ugc",
+  desc:"창작물이 제작 → 업로드 → 검수 → 배포되는 전체 흐름입니다. 각 단계마다 기술 검증(런타임 검증), 정책 검수(모더레이션), 배포 승인이 이루어집니다. 파이프라인이 느리면 크리에이터 이탈로 이어집니다.",
+  analogy:"출판 프로세스예요. 원고(창작물)가 편집→교정→인쇄→유통 단계를 거쳐 독자에게 도달하듯, 콘텐츠도 검수 파이프라인을 통과해야 유저에게 노출됩니다." },
+
+{ term:"모딩 (Modding)", eng:"Modding / Mod SDK", cat:"ugc",
+  desc:"유저가 게임의 콘텐츠·규칙·비주얼을 수정하거나 확장하는 활동입니다. 공식 Mod SDK를 제공하면 크리에이터 생태계가 활성화됩니다. 마인크래프트, 스카이림 등이 모딩 커뮤니티로 수명을 크게 연장했습니다.",
+  analogy:"자동차 튜닝 문화예요. 기본 차(게임)를 유저가 각자 방식으로 개조해서 더 빠르게, 더 예쁘게, 더 특이하게 만드는 것입니다. 튜닝 부품(SDK)을 공식 제공하면 문화가 폭발적으로 성장합니다." },
+
+{ term:"크로스 프로그레션", eng:"Cross-progression", cat:"ugc",
+  desc:"PC, 콘솔, 모바일 등 다른 플랫폼에서 플레이해도 레벨, 아이템, 진행 상황이 동기화되는 기능입니다. 크로스플레이(같이 플레이)와 별개로 관리되며, 각 플랫폼의 정책 제약(예: 소니의 크로스세이브 제한)을 고려해야 합니다.",
+  analogy:"클라우드 저장 이야기예요. 집에서 하던 게임을 카페에서 노트북으로, 출퇴근 중엔 폰으로 이어서 하는 것처럼, 기기가 달라도 내 데이터는 그대로입니다." },
+
+/* live 추가 */
+{ term:"리모트 컨피그", eng:"Remote Config / Live Configuration", cat:"live",
+  desc:"앱 업데이트 없이 서버에서 설정값을 변경해 앱 동작을 실시간으로 조정하는 기능입니다. 이벤트 배너 on/off, 가격 조정, 밸런스 수치 변경 등에 활용됩니다. Firebase Remote Config, AWS AppConfig 등이 대표적입니다.",
+  analogy:"에어컨 리모컨이에요. 에어컨(앱)을 분해하지 않아도 리모컨(Remote Config)으로 온도와 풍량을 실시간 조정할 수 있습니다." },
+
+{ term:"어드민 콘솔", eng:"Admin Console / GM Tool", cat:"live",
+  desc:"운영자(GM, 어드민)가 유저 계정 관리, 아이템 지급, 이벤트 설정, 제재 처리 등 라이브 운영 업무를 수행하는 내부 관리 도구입니다. 운영툴의 모든 액션은 Audit Log로 기록되어야 합니다.",
+  analogy:"병원 원무과 시스템이에요. 의사(개발자)가 아닌 행정 직원(GM)이 환자(유저) 정보 조회, 예약 변경, 수납 처리를 할 수 있는 전용 인터페이스입니다." },
+
+{ term:"블레임리스 컬처", eng:"Blameless Culture / Blameless Postmortem", cat:"live",
+  desc:"장애나 사고 발생 시 특정 개인을 비난하지 않고, 시스템·프로세스·구조적 문제를 개선하는 데 집중하는 조직 문화입니다. Google, Netflix 등 테크 기업의 사고 대응 문화에서 시작됐습니다.",
+  analogy:"항공 안전 문화예요. 조종사 실수를 처벌하면 사고가 은폐됩니다. 대신 '왜 그 상황이 만들어졌나'를 분석해 시스템을 개선하는 것이 장기적으로 더 안전합니다." },
+
+/* mobile 추가 */
+{ term:"디퍼드 딥링크", eng:"Deferred Deep Link", cat:"mobile",
+  desc:"앱이 설치되어 있지 않은 상태에서 링크를 클릭했을 때, 스토어 설치 후 해당 화면으로 자동 이동시키는 기능입니다. 마케팅 캠페인과 앱 온보딩을 연결하는 데 사용합니다. Adjust, AppsFlyer, Branch 등이 지원합니다.",
+  analogy:"QR코드 예약이에요. 식당 QR을 찍었는데 앱이 없으면 앱스토어로 보내고, 설치 후 바로 그 식당 예약 화면이 뜨는 구조입니다." },
+
+{ term:"코어 바이탈 / ANR", eng:"Core Vitals / ANR (App Not Responding)", cat:"mobile",
+  desc:"Google Play가 앱 품질을 측정하는 핵심 지표입니다. ANR(앱이 반응하지 않음)과 Crash 발생률이 기준치를 초과하면 스토어 노출이 제한됩니다. 고품질 앱 배지와 피처드 선정에도 영향을 줍니다.",
+  analogy:"식품 위생 등급이에요. 위생 점수(Core Vitals)가 낮으면 영업 제한을 받듯, 앱도 품질 지표가 나쁘면 스토어에서 불이익을 받습니다." },
+
+{ term:"앱 스토어 커넥트", eng:"App Store Connect", cat:"mobile",
+  desc:"Apple의 iOS 앱 관리 콘솔입니다. 앱 등록, 심사 제출, TestFlight 배포, 매출 정산, 리뷰 관리, 분석 지표 확인을 모두 이 콘솔에서 처리합니다. Android의 Google Play Console과 동일한 역할입니다.",
+  analogy:"출판사 원고 관리 시스템이에요. 원고 제출(앱 등록), 편집 검토(심사), 유통 현황(매출), 독자 반응(리뷰)까지 한 곳에서 관리합니다." },
+
+{ term:"메타데이터 반려", eng:"Metadata Rejection / Binary Rejection", cat:"mobile",
+  desc:"앱 심사 반려 유형입니다. 메타데이터 반려(Metadata Rejection)는 스크린샷·설명·제목·키워드가 정책에 위반된 경우이고, 바이너리 반려(Binary Rejection)는 앱 코드나 기능 자체에 문제가 있는 경우입니다. 각각 수정 범위와 재심사 기간이 다릅니다.",
+  analogy:"책 출판 반려예요. 책 표지·제목이 문제면 표지만 바꾸면 되지만(메타데이터), 내용 자체에 저작권 문제가 있으면 본문을 다시 써야 합니다(바이너리)." },
+
+/* biz 추가 */
+{ term:"사전예약 / 위시리스트", eng:"Pre-registration / Wishlist", cat:"biz",
+  desc:"출시 전 유저의 관심을 등록받는 기능입니다. 구글플레이는 사전예약(Pre-registration), Steam은 위시리스트(Wishlist)를 사용합니다. 누적된 사전예약자에게 출시 알림을 보내며, 위시리스트 수는 Steam의 피처드 선정에도 영향을 줍니다.",
+  analogy:"오픈 전 줄 서기예요. 오픈 전 번호표를 뽑아두면, 문 열리는 순간 바로 입장할 수 있습니다. 줄이 길수록 흥행 기대감도 올라갑니다." },
+
+{ term:"플랫폼 패리티", eng:"Platform Parity", cat:"biz",
+  desc:"게임의 기능, 콘텐츠, 가격이 모든 플랫폼에서 동일하게 제공되어야 한다는 원칙입니다. 특히 콘솔 퍼블리셔(Sony, Microsoft)는 자사 플랫폼에서 타 플랫폼보다 열등한 콘텐츠가 출시되는 것을 허용하지 않습니다.",
+  analogy:"최혜국 대우예요. 특정 국가(플랫폼)에 더 낮은 관세(가격)나 적은 혜택(콘텐츠)을 주지 않겠다는 약속입니다." },
+
+{ term:"에디토리얼 피처드", eng:"Editorial Featuring / Store Curation", cat:"biz",
+  desc:"앱스토어·구글플레이·Steam 편집팀이 직접 선정해 메인 페이지에 노출해주는 것입니다. 유료 광고와 달리 무료이며 신뢰도가 높습니다. 피처드 선정을 위해 출시 전 스토어 담당자와 사전 커뮤니케이션이 필요합니다.",
+  analogy:"서점 큐레이션이에요. 돈을 내고 코너에 책을 배치하는 게 아니라, 서점 MD가 '이 책 좋다'고 골라서 앞에 놔주는 것입니다. 신뢰도가 다릅니다." },
+
+/* ──────────────── 개발 프로세스 ──────────────── */
+{ term:"애자일 vs 워터폴", eng:"Agile vs Waterfall", cat:"devproc",
+  desc:"워터폴은 요구사항→설계→개발→테스트→배포를 순서대로 진행하는 선형 방법론, 애자일은 짧은 반복(스프린트)으로 지속적으로 개발·피드백·개선하는 방법론입니다. 게임 개발은 대부분 애자일 기반으로 전환되었습니다.",
+  analogy:"여행 계획 스타일이에요. 워터폴은 출발 전 모든 일정을 확정하는 패키지 여행, 애자일은 방향만 정하고 매일 그날 상황에 맞게 조정하는 자유 여행입니다." },
+
+{ term:"스크럼", eng:"Scrum", cat:"devproc",
+  desc:"애자일의 대표적인 프레임워크입니다. 스프린트 단위 반복, 데일리 스탠드업, 스프린트 리뷰, 회고로 구성됩니다. 스크럼 마스터(진행 촉진), 프로덕트 오너(우선순위 결정), 개발팀의 3가지 역할로 운영됩니다.",
+  analogy:"럭비 스크럼이에요. 팀이 촘촘히 뭉쳐 같은 방향으로 전진하는 이미지에서 따온 이름입니다. 누가 무엇을 하고 어디로 가는지 팀 전체가 공유합니다." },
+
+{ term:"칸반", eng:"Kanban Board", cat:"devproc",
+  desc:"작업을 '해야 할 일 → 진행 중 → 완료' 컬럼으로 시각화해 흐름을 관리하는 방법론입니다. 스크럼의 스프린트 단위 없이 지속적인 흐름으로 작업합니다. Jira 보드, Trello가 대표적인 칸반 도구입니다.",
+  analogy:"공장 조립 라인이에요. 각 공정(컬럼)에 작업이 쌓이지 않도록 흐름을 제어하고, 병목 구간을 눈으로 바로 확인할 수 있습니다." },
+
+{ term:"CI/CD", eng:"Continuous Integration / Continuous Delivery", cat:"devproc",
+  desc:"코드 변경이 생기면 자동으로 빌드·테스트·배포가 실행되는 파이프라인입니다. CI(지속적 통합)는 빌드와 테스트 자동화, CD(지속적 배포)는 스테이징·운영 환경 자동 배포입니다. GitHub Actions, Jenkins, GitLab CI가 대표 도구입니다.",
+  analogy:"자동화 공장이에요. 재료(코드)를 넣으면 자동으로 가공·검사·포장·출하가 이루어집니다. 사람이 버튼을 누를 필요 없이 컨베이어벨트가 알아서 돌아갑니다." },
+
+{ term:"데일리 스탠드업", eng:"Daily Standup / Daily Scrum", cat:"devproc",
+  desc:"매일 15분 내외로 진행하는 팀 동기화 회의입니다. '어제 한 일 / 오늘 할 일 / 막히는 것(blocker)'을 공유합니다. 서서 하는 이유는 짧게 끝내기 위함이며, 문제 해결은 스탠드업 외에서 합니다.",
+  analogy:"아침 조회예요. 오늘 무슨 일이 있는지, 도움이 필요한 사람이 있는지 빠르게 확인하는 시간입니다. 길어지면 의미가 없습니다." },
+
+{ term:"PR / 코드 리뷰", eng:"Pull Request / Code Review", cat:"devproc",
+  desc:"코드 변경사항을 메인 브랜치에 합치기 전 팀원이 검토하는 프로세스입니다. PR(Pull Request) 또는 MR(Merge Request)을 통해 요청하고, 리뷰어가 승인해야 병합됩니다. 버그 예방과 지식 공유의 핵심 장치입니다.",
+  analogy:"공문 결재 과정이에요. 담당자가 문서를 작성하면(PR 생성), 팀장 검토·서명(리뷰·승인) 후 발송(배포)됩니다. 결재 없이 혼자 발송하면 큰일 납니다." },
+
+{ term:"브랜치 전략 (Git Flow)", eng:"Branch Strategy / Git Flow", cat:"devproc",
+  desc:"여러 개발자가 동시에 작업할 때 코드 충돌을 방지하는 브랜치 구조입니다. Git Flow는 main·develop·feature·release·hotfix 브랜치를 구분해 운영합니다. 브랜치 전략이 없으면 배포 직전 충돌로 일정이 지연됩니다.",
+  analogy:"레스토랑 주방 역할 분담이에요. 전채·메인·디저트 파트가 따로 작업하다가 플레이팅(배포) 시점에 합칩니다. 누가 어떤 요리를 맡는지 규칙이 없으면 주방이 혼돈에 빠집니다." },
+
+{ term:"기술 부채 (Tech Debt)", eng:"Technical Debt", cat:"devproc",
+  desc:"빠른 개발을 위해 '일단 되게만' 구현한 코드가 나중에 개선 비용으로 돌아오는 것입니다. 이자처럼 쌓이며, 방치할수록 새 기능 추가나 버그 수정이 점점 어려워집니다.",
+  analogy:"신용카드 할부예요. 지금 당장 현금 없이 쓸 수 있지만, 이자(유지보수 비용)가 붙어 나중엔 원금보다 더 많이 갚아야 합니다. 너무 쌓이면 파산(리팩토링 불가)합니다." },
+
+{ term:"피처 플래그", eng:"Feature Flag / Feature Toggle", cat:"devproc",
+  desc:"코드에 기능을 구현해 두고, 설정값으로 ON/OFF를 제어하는 방식입니다. 특정 유저 그룹에만 노출하거나(A/B 테스트), 문제 시 즉시 비활성화할 수 있습니다. 배포와 기능 릴리스를 분리할 수 있는 핵심 기법입니다.",
+  analogy:"조명 스위치예요. 전선 공사(코드 배포)는 미리 다 해두고, 스위치(플래그)만 켜면 불이 들어옵니다. 문제가 생기면 스위치만 내리면 됩니다." },
+
+{ term:"코드 프리즈", eng:"Code Freeze", cat:"devproc",
+  desc:"출시나 마일스톤 직전 일정 시점부터 새 기능 코드 추가를 금지하고, 버그 수정만 허용하는 정책입니다. 코드 프리즈 이후엔 QA가 안정적으로 테스트할 수 있는 빌드를 유지합니다.",
+  analogy:"시험 전날 벼락치기 금지예요. 새로운 내용을 더 넣으려다 이미 아는 것도 헷갈리게 됩니다. 지금 아는 것을 정리하고 검토하는 시간이 필요합니다." },
+
+{ term:"DevOps", eng:"DevOps", cat:"devproc",
+  desc:"개발(Dev)과 운영(Ops)의 협력을 강화해 빠르고 안정적인 배포를 실현하는 문화·방법론입니다. 자동화(CI/CD), 모니터링, 인프라 코드화(IaC)가 핵심 도구입니다.",
+  analogy:"주방과 홀 서비스의 통합이에요. 주방(개발)과 홀(운영)이 서로 모르면 주문 오류가 잦습니다. 둘이 긴밀히 소통하고 시스템을 공유하면 서비스 품질이 올라갑니다." },
+
+{ term:"Shift Left", eng:"Shift Left Testing", cat:"devproc",
+  desc:"QA, 보안 검증, 성능 테스트를 개발 후반이 아닌 초반으로 당기는 전략입니다. 개발 타임라인에서 왼쪽(초반)으로 이동한다는 의미입니다. 결함을 늦게 발견할수록 수정 비용이 기하급수적으로 늘어나기 때문입니다.",
+  analogy:"건강 검진 주기 당기기예요. 아프고 나서 병원 가는 것보다, 정기 검진으로 초기에 발견하는 게 치료 비용도 적고 결과도 좋습니다." },
+
+{ term:"SSOT", eng:"Single Source of Truth", cat:"devproc",
+  desc:"데이터나 문서의 기준 원본을 하나로 통일하는 원칙입니다. 여러 곳에 복사된 문서가 있으면 어느 것이 최신인지 혼란이 생깁니다. Confluence 페이지, Jira 이슈, DB 테이블 등 각 정보의 권위 있는 출처를 하나로 정합니다.",
+  analogy:"법정 원본 서류예요. 사본이 여러 개 있어도 법적 효력이 있는 건 원본 하나뿐입니다. 팀도 '이 페이지가 정답'인 SSOT를 정해두면 혼선이 사라집니다." },
+
+{ term:"노스 스타 메트릭", eng:"North Star Metric / NSM", cat:"devproc",
+  desc:"조직 전체가 집중해야 할 단 하나의 핵심 지표입니다. 페이스북의 DAU, 에어비앤비의 예약 완료 수처럼, 이 지표가 올라가면 비즈니스가 성장하고 있다고 판단할 수 있는 최상위 지표입니다.",
+  analogy:"나침반이에요. 다양한 KPI가 있어도, 팀 전체가 '이 방향'을 공유하는 하나의 기준이 있어야 엇갈리지 않습니다." },
+
+/* ──────────────── 인프라 / 배포 ──────────────── */
+{ term:"블루-그린 배포", eng:"Blue-Green Deployment", cat:"infra",
+  desc:"기존 버전(블루)과 새 버전(그린) 서버를 동시에 운영하다가, 준비가 되면 트래픽을 그린으로 전환하는 배포 방식입니다. 문제 발생 시 즉시 블루로 롤백할 수 있어 다운타임 없이 배포가 가능합니다.",
+  analogy:"새 다리 개통 방식이에요. 새 다리(그린)를 완공하고 검증한 뒤 차량을 이쪽으로 유도하고, 문제가 생기면 기존 다리(블루)로 다시 돌립니다." },
+
+{ term:"롤링 업데이트", eng:"Rolling Update", cat:"infra",
+  desc:"서버 인스턴스를 한 번에 교체하지 않고 순차적으로 하나씩 교체하는 배포 방식입니다. 전체 다운타임 없이 배포할 수 있지만, 교체 중 구버전과 신버전이 동시에 존재하는 시간이 발생합니다.",
+  analogy:"비행기 엔진 교체예요. 엔진 4개를 한 번에 끄지 않고 하나씩 교체하면서 비행을 유지합니다. 중간에 1·2세대 엔진이 혼재하는 시간이 있습니다." },
+
+{ term:"PoC", eng:"Proof of Concept / 개념 증명", cat:"devproc",
+  desc:"특정 기술·아이디어가 실제로 구현 가능한지 검증하는 소규모 실험입니다. 완성도보다 '되는지 안 되는지' 확인이 목적입니다. PoC가 성공해야 본격 개발 예산과 일정을 잡을 수 있습니다.",
+  analogy:"요리 전 식재료 궁합 테스트예요. 새 레시피를 정식 메뉴로 올리기 전, 일단 소량만 만들어 '이 재료끼리 어울리는지'를 먼저 확인합니다." },
+
+{ term:"프로토타입", eng:"Prototype", cat:"devproc",
+  desc:"핵심 기능이나 UX를 빠르게 구현해 검증하는 초기 버전입니다. PoC보다 완성도가 높으며 실제 사용 흐름을 확인하는 데 초점을 둡니다. 빠르게 만들고 빠르게 버리는 것이 원칙이며, 프로토타입 코드를 그대로 본 개발에 쓰면 기술 부채가 됩니다.",
+  analogy:"영화 콘티예요. 실제 촬영 전에 장면 흐름을 스케치로 빠르게 그려봅니다. 완성도보다 '이 방향이 맞나'를 확인하는 것이 목적입니다." },
+
+{ term:"MVP", eng:"Minimum Viable Product / 최소 기능 제품", cat:"devproc",
+  desc:"시장 검증에 필요한 최소한의 기능만 담아 출시하는 제품입니다. 완벽한 제품을 만들기 전에 실제 유저 반응을 빠르게 수집하고 방향을 조정합니다. PoC(기술 검증) → 프로토타입(흐름 검증) → MVP(시장 검증) 순으로 단계가 올라갑니다.",
+  analogy:"포장마차 창업이에요. 본격 식당을 열기 전 포장마차로 메뉴 반응을 먼저 봅니다. 잘 팔리는 메뉴가 확인되면 그때 제대로 된 가게를 냅니다." },
+
+{ term:"파일럿", eng:"Pilot / Pilot Program", cat:"devproc",
+  desc:"전면 도입 전 제한된 범위에서 먼저 시험 운영하는 것입니다. 소프트 런치와 비슷하지만 파일럿은 내부 검증이나 소규모 시장에서의 프로세스 검증에 더 가깝습니다. 결과를 바탕으로 확대 여부와 방식을 결정합니다.",
+  analogy:"프랜차이즈 1호점이에요. 전국 확장 전에 한 지점을 직영으로 운영해보며 운영 매뉴얼을 완성하고, 예상 문제를 미리 발견합니다." },
+
+{ term:"스파이크", eng:"Spike / Technical Spike", cat:"devproc",
+  desc:"애자일에서 기술적 불확실성을 해소하기 위해 수행하는 짧은 조사·실험 태스크입니다. '이 기술로 구현이 가능한가?', '이 API가 우리 요구를 충족하는가?'를 스프린트에 포함해 검증합니다. 결과물은 코드가 아닌 지식과 판단입니다.",
+  analogy:"사전 답사예요. 팀 워크숍 장소로 가기 전 한 사람이 먼저 가서 '실제로 쓸 만한지' 확인합니다. 답사 결과로 가느냐 마느냐를 결정합니다." },
+
+{ term:"버티컬 슬라이스", eng:"Vertical Slice", cat:"game",
+  desc:"게임의 핵심 경험을 처음부터 끝까지 보여주는 작은 단면 빌드입니다. 퍼블리셔 피칭, 내부 의사결정, 팀 방향 정렬에 사용합니다. 가로로 얕게(기능 목록) 구현하는 대신, 하나의 완결된 경험을 세로로 깊게 구현합니다.",
+  analogy:"음식점 시그니처 메뉴예요. 전체 메뉴판을 보여주는 대신, '이 집 최고의 요리 하나'를 완벽하게 선보여 식당의 수준을 증명하는 것입니다." },
+
+{ term:"데모 빌드", eng:"Demo Build / Playable Demo", cat:"game",
+  desc:"외부에 공개 가능한 체험용 빌드입니다. 게임쇼(G-STAR, TGS), 퍼블리셔 미팅, Steam 넥스트 페스트 등에 활용됩니다. 버티컬 슬라이스를 다듬어 데모로 만들거나, 일부 챕터만 공개하는 방식을 사용합니다.",
+  analogy:"영화 예고편이에요. 전체를 다 보여주지 않고 가장 흥미로운 부분만 편집해서 '이 영화 재밌을 것 같다'는 인상을 주는 것입니다." },
+
+{ term:"IaC (인프라 코드화)", eng:"Infrastructure as Code / IaC / Terraform", cat:"infra",
+  desc:"서버, 네트워크, DB 같은 인프라 구성을 코드로 정의하고 관리하는 방식입니다. Terraform이 대표 도구입니다. 코드로 관리하면 버전 관리, 재현, 팀 공유가 가능해집니다.",
+  analogy:"요리 레시피 코드화예요. '소금 약간'이 아니라 '소금 5g'처럼 정확히 기록해두면 누가 만들어도 같은 맛이 납니다. 서버도 코드로 정의하면 어디서든 동일한 환경을 재현할 수 있습니다." },
+
+{ term:"Observability / Telemetry", eng:"Observability / Telemetry", cat:"infra",
+  desc:"시스템 내부 상태를 외부에서 관측 가능하게 만드는 것입니다. 로그(Log), 메트릭(Metric), 트레이싱(Tracing) 3가지가 핵심 축입니다. Telemetry는 클라이언트·서버에서 이 데이터를 수집하는 행위입니다.",
+  analogy:"자동차 계기판이에요. 엔진 열고 직접 보지 않아도, 속도·온도·연료 게이지(메트릭)와 경고등(알럿)으로 차 상태를 파악합니다. 계기판이 없으면 엔진 터지기 전에 알 방법이 없습니다." },
+
+{ term:"서비스 메시", eng:"Service Mesh / Istio", cat:"infra",
+  desc:"마이크로서비스 간의 통신(트래픽 관리, 인증, 로드밸런싱, 관찰)을 애플리케이션 코드 밖에서 처리하는 인프라 레이어입니다. Istio가 대표적인 서비스 메시 플랫폼입니다.",
+  analogy:"도시 교통 관제 시스템이에요. 각 차(서비스)가 경로를 직접 찾는 게 아니라, 관제 시스템이 트래픽을 조정하고 사고를 탐지해 우회 경로를 안내합니다." },
+
+{ term:"MSA (마이크로서비스)", eng:"Microservice Architecture / MSA", cat:"infra",
+  desc:"서비스를 기능 단위의 독립적인 소규모 서비스로 분리하는 아키텍처입니다. 각 서비스는 독립 배포·확장이 가능하며, 장애가 발생해도 다른 서비스에 영향이 최소화됩니다. 모놀리식(단일 큰 서비스) 구조와 반대입니다.",
+  analogy:"편의점 프랜차이즈예요. 본사 하나(모놀리식) 대신 각 동네 편의점(마이크로서비스)이 독립적으로 운영되지만, 같은 브랜드로 협력합니다. 한 점포가 문을 닫아도 다른 점포는 영업합니다." },
+
+{ term:"EDA (이벤트 기반 아키텍처)", eng:"Event-Driven Architecture / EDA / Pub-Sub", cat:"infra",
+  desc:"서비스 간 통신을 직접 API 호출이 아닌 이벤트 발행/구독 방식으로 연결하는 구조입니다. A 서비스가 이벤트를 발행하면 관심 있는 서비스들이 비동기로 처리합니다. Kafka, RabbitMQ가 대표 메시지 브로커입니다.",
+  analogy:"뉴스레터 구독이에요. 신문사(Publisher)가 기사를 발행하면, 구독자(Subscriber)들이 각자 읽습니다. 구독자가 누구인지 신문사가 일일이 알 필요 없습니다." },
+
+{ term:"서킷 브레이커", eng:"Circuit Breaker Pattern", cat:"infra",
+  desc:"특정 서비스 호출이 연속으로 실패하면 자동으로 차단하고, 장애가 다른 서비스로 전파되는 것을 막는 패턴입니다. 일정 시간 후 재시도해 복구 여부를 확인합니다.",
+  analogy:"두꺼비집(차단기)이에요. 특정 회로(서비스)에 과부하가 걸리면 자동으로 차단해 집 전체(시스템)가 합선되는 것을 막습니다." },
+
+{ term:"쿠버네티스 (K8s)", eng:"Kubernetes / K8s / Container Orchestration", cat:"infra",
+  desc:"컨테이너화된 앱을 자동으로 배포·확장·관리하는 오픈소스 플랫폼입니다. 서버 수십~수백 개에 걸친 컨테이너를 자동으로 스케줄링하고, 장애 시 자동 복구합니다. K8s는 Kubernetes의 약어(K+8글자+s)입니다.",
+  analogy:"항공 관제탑이에요. 수백 대의 비행기(컨테이너)가 어느 활주로(서버)에서 이착륙할지, 연료는 충분한지, 문제가 생기면 어떻게 우회할지를 자동으로 관리합니다." },
+
+{ term:"서버리스", eng:"Serverless / FaaS (Function as a Service)", cat:"infra",
+  desc:"서버 인프라를 직접 관리하지 않고, 함수 단위로 코드를 실행하는 방식입니다. 요청이 있을 때만 실행되고 사용한 만큼만 비용을 냅니다. AWS Lambda, Google Cloud Functions가 대표적입니다.",
+  analogy:"택시 vs 자가용이에요. 자가용(서버)은 안 탈 때도 주차비가 나가지만, 택시(서버리스)는 탈 때만 요금이 나옵니다. 트래픽이 불규칙하거나 적을 때 유리합니다." },
+
+{ term:"멀티 리전", eng:"Multi-region Deployment", cat:"infra",
+  desc:"서버를 여러 지역(리전)에 분산 배포해 레이턴시를 줄이고 장애 내성을 높이는 전략입니다. 한 리전 장애가 전 세계 서비스에 영향을 주지 않도록 설계합니다. 글로벌 게임 서비스에서는 필수 아키텍처입니다.",
+  analogy:"체인 물류 창고 전략이에요. 창고를 전국에 분산하면 배송이 빨라지고(레이턴시 감소), 한 곳이 문제 생겨도 전국 배송이 멈추지 않습니다(장애 내성)." },
+
+{ term:"카오스 엔지니어링", eng:"Chaos Engineering", cat:"infra",
+  desc:"의도적으로 장애를 발생시켜 시스템의 복원력을 테스트하는 방법론입니다. Netflix의 'Chaos Monkey'가 시초입니다. '나쁜 일이 일어나기 전에 미리 나쁜 일을 만들어 대비한다'는 역발상입니다.",
+  analogy:"소방 훈련이에요. 실제 화재가 나기 전에 일부러 연기 경보를 울려서, 직원들이 얼마나 빨리 대피하는지 훈련합니다. 진짜 화재 때 당황하지 않기 위해서입니다." },
+
+/* ──────────────── 데이터 / 분석 ──────────────── */
+{ term:"A/B 테스트", eng:"A/B Test / Experiment", cat:"data",
+  desc:"두 가지 버전(A, B)을 유저 그룹에 나눠 노출해 어느 쪽이 목표 지표에 더 효과적인지 데이터로 검증하는 실험 방법입니다. UI 변경, 가격 조정, 온보딩 흐름 최적화 등에 활용됩니다.",
+  analogy:"블라인드 테스트예요. 어느 게 더 맛있는지 포장을 가리고 테스트하듯, A/B 테스트도 선입견 없이 데이터로 판단합니다." },
+
+{ term:"어트리뷰션", eng:"Attribution / 광고 기여도 분석", cat:"data",
+  desc:"유저가 어떤 광고·채널을 통해 앱을 설치했는지 추적하는 기술입니다. 마케팅 예산의 어느 채널이 효과적인지 분석하는 데 필수입니다. Adjust, AppsFlyer, Singular가 대표 어트리뷰션 솔루션입니다.",
+  analogy:"소개비 지급이에요. 새 손님이 누가 소개해서 왔는지를 추적해야 소개비를 제대로 줄 수 있습니다. 어트리뷰션은 '이 유저는 페이스북 광고로 왔다'를 확인하는 도구입니다." },
+
+{ term:"코호트 분석", eng:"Cohort Analysis", cat:"data",
+  desc:"같은 기간에 가입한 유저 그룹(코호트)의 행동을 시간 경과에 따라 추적하는 분석 방법입니다. '1월에 가입한 유저의 D7 리텐션이 2월 가입자보다 10% 높다'처럼, 시기별 품질 변화를 비교할 수 있습니다.",
+  analogy:"입학 연도별 졸업률 추적이에요. 2020년 입학생과 2021년 입학생이 어떻게 다른지 비교하면, 커리큘럼 변화가 실제로 효과가 있었는지 알 수 있습니다." },
+
+{ term:"퍼널 분석", eng:"Funnel Analysis / Conversion Funnel", cat:"data",
+  desc:"유저가 목표 행동(설치→회원가입→튜토리얼 완료→첫 결제)까지 각 단계를 통과하는 비율을 추적하는 분석 방법입니다. 어느 단계에서 가장 많이 이탈하는지 찾아 개선합니다.",
+  analogy:"깔때기(퍼널)예요. 넓은 입구에서 시작해 각 단계를 거칠수록 좁아집니다. 가장 많이 새는 구멍을 찾아 막는 게 최우선 과제입니다." },
+
+{ term:"이탈률 (Churn Rate)", eng:"Churn Rate", cat:"data",
+  desc:"일정 기간 동안 서비스를 떠난 유저의 비율입니다. Churn Rate 높으면 아무리 신규 유저를 끌어와도 밑 빠진 독에 물 붓기가 됩니다. 리텐션(잔존율)과 반대 개념으로, Churn = 1 - Retention입니다.",
+  analogy:"새는 양동이예요. 물을 계속 붓더라도 구멍이 크면 항상 반밖에 안 찹니다. 이탈 원인을 찾아 구멍을 막는 것이 신규 유입보다 효율적일 수 있습니다." },
+
+{ term:"CTR / CVR", eng:"Click-Through Rate / Conversion Rate", cat:"data",
+  desc:"CTR은 광고·배너 노출 대비 클릭 비율, CVR은 클릭·방문 대비 목표 행동(설치, 결제) 완료 비율입니다. CTR이 높아도 CVR이 낮으면 랜딩 페이지나 온보딩에 문제가 있다는 신호입니다.",
+  analogy:"식당 간판과 입장률이에요. 간판을 보고 들어오는 사람 수(CTR)가 많아도, 실제 주문하는 비율(CVR)이 낮으면 메뉴나 분위기에 문제가 있는 것입니다." },
+
+{ term:"ARPDAU", eng:"ARPDAU (Average Revenue Per Daily Active User)", cat:"data",
+  desc:"일간 활성 유저 1인당 평균 매출입니다. ARPU(전체 유저 기준)보다 실제 활동 유저 기준이므로 수익화 효율을 더 정확히 반영합니다. ARPDAU × DAU = 일일 총매출입니다.",
+  analogy:"영업 중인 매장의 1일 1인당 객단가예요. 문 열고 있는 시간 동안 손님 한 명이 평균 얼마를 쓰는지를 나타냅니다." },
+
+{ term:"Firebase", eng:"Firebase / Google Firebase", cat:"data",
+  desc:"Google의 모바일·웹 앱 개발 백엔드 플랫폼입니다. Firestore(DB), Firebase Auth(인증), FCM(푸시 알림), Crashlytics(크래시 분석), Remote Config, A/B Testing, Analytics를 통합 제공합니다. 게임 스타트업과 인디 개발사에서 백엔드 인프라로 많이 사용합니다.",
+  analogy:"앱 개발용 올인원 패키지예요. 인증·DB·푸시·분석을 각각 따로 구축하는 대신, 하나의 SDK로 연결해 빠르게 시작할 수 있습니다." },
+
+{ term:"데이터 파이프라인", eng:"Data Pipeline / ETL / ELT", cat:"data",
+  desc:"데이터가 원천(게임 서버, 앱 클라이언트)에서 수집→가공→저장→시각화되는 전체 흐름입니다. ETL은 추출(Extract)→변환(Transform)→적재(Load), ELT는 추출→적재→변환 순서입니다. BigQuery, Redshift, Spark 등이 활용됩니다.",
+  analogy:"정수 처리 과정이에요. 원수(Raw Data)를 채취→불순물 제거(Transform)→정수기에 저장(Load)해야 깨끗한 물(분석 데이터)을 마실 수 있습니다." },
+
+{ term:"오딧 로그", eng:"Audit Log / Action Log", cat:"data",
+  desc:"누가 언제 무엇을 했는지 기록하는 변경 이력 로그입니다. 운영툴에서 관리자 액션, DB 변경 이력, 유저 제재 내역 등을 감사(Audit) 목적으로 저장합니다. 사고 발생 시 원인 추적과 책임 소재 확인에 필수입니다.",
+  analogy:"CCTV 영상 녹화예요. 평소엔 별로 보지 않지만, 사고가 나면 언제 누가 무엇을 했는지 돌려봐야 합니다. 기록이 없으면 원인도, 책임도 찾을 수 없습니다." },
+
+{ term:"크래시 프리 유저", eng:"Crash-free Users Rate", cat:"data",
+  desc:"전체 유저 중 크래시 없이 앱을 사용한 유저의 비율입니다. Google Play Core Vitals의 핵심 지표이며, 99% 이상 유지가 권장됩니다. Firebase Crashlytics, Sentry로 모니터링합니다.",
+  analogy:"무결점 납품률이에요. 공장에서 제품 100개를 납품했을 때 불량이 없는 비율입니다. 1%만 불량이어도 1만 명 중 100명이 문제를 겪습니다." },
+
+/* ──────────────── AI / 생산성 ──────────────── */
+{ term:"바이브 코딩", eng:"Vibe Coding", cat:"ai",
+  desc:"AI(Claude, GPT, Cursor 등)와 자연어 대화로 코드를 작성하는 개발 방식입니다. '이런 기능 만들어줘'라고 말하면 AI가 코드를 생성하고, 사람은 방향을 잡고 검토합니다. 비개발자도 간단한 앱을 만들 수 있는 시대를 열고 있습니다.",
+  analogy:"AI 주방 보조예요. 셰프(개발자)가 '오늘 파스타 만들자'고 말하면 보조(AI)가 재료를 손질하고 기본 조리를 합니다. 셰프는 방향과 맛 조정에 집중합니다." },
+
+{ term:"AI 에이전트", eng:"AI Agent / Agentic AI", cat:"ai",
+  desc:"단순한 질문 답변을 넘어 여러 단계 작업을 스스로 계획·실행하는 AI입니다. 파일 읽기, 검색, 코드 실행, API 호출을 연속해서 수행합니다. Claude Code, Cursor Agent, AutoGPT 등이 해당됩니다.",
+  analogy:"인턴 사원이에요. '이 보고서 조사해서 정리해줘'라고 하면 스스로 검색하고, 분석하고, 문서를 작성하는 AI입니다. 시키는 것만 하는 단순 도구와 다릅니다." },
+
+{ term:"Human-in-the-loop", eng:"Human-in-the-loop / HITL", cat:"ai",
+  desc:"AI가 작업을 수행하되, 중요한 판단 지점에서 사람이 검토·승인하는 구조입니다. 완전 자동화와 수동 작업 사이의 균형점으로, 콘텐츠 모더레이션·의료 진단·금융 결정 등 오류 비용이 큰 영역에서 중요합니다.",
+  analogy:"비행기 자동 조종 장치예요. 대부분 자동 비행(AI)이지만, 이착륙 같은 중요 순간엔 파일럿(사람)이 직접 제어합니다. 완전 AI에 맡기기엔 리스크가 있는 구간이 있습니다." },
+
+{ term:"컨텍스트 엔지니어링", eng:"Context Engineering", cat:"ai",
+  desc:"AI가 더 정확하고 유용한 결과를 내도록 입력 정보(컨텍스트)의 구조와 내용을 설계하는 기술입니다. 단순 프롬프트 작성을 넘어, 어떤 문서·배경·역할을 AI에게 제공하느냐를 체계적으로 설계합니다.",
+  analogy:"브리핑 문서 작성이에요. 신입 직원에게 일을 시킬 때 맥락을 얼마나 잘 설명하느냐에 따라 결과물의 질이 달라집니다. AI도 마찬가지입니다." },
+
+{ term:"PromptOps", eng:"PromptOps / Prompt Management", cat:"ai",
+  desc:"프롬프트를 소프트웨어처럼 버전 관리·테스트·배포·운영하는 체계입니다. 여러 팀이 프롬프트를 공유·개선하고, 성능을 측정하며, 변경 이력을 관리합니다. AI 서비스가 고도화될수록 PromptOps의 중요성이 높아집니다.",
+  analogy:"코드 형상 관리예요. 코드를 Git으로 관리하듯, 프롬프트도 '누가 언제 어떻게 바꿨는지' 추적하고, 좋은 버전을 공유하는 체계가 필요합니다." },
+
+{ term:"AI 네이티브 워크플로우", eng:"AI-Native Workflow", cat:"ai",
+  desc:"처음부터 AI 활용을 전제로 설계된 업무 흐름입니다. 기존 프로세스에 AI를 끼워 넣는 게 아니라, 'AI가 이걸 할 테니 사람은 이걸 한다'는 방식으로 역할 자체를 재설계합니다.",
+  analogy:"전기차 전용 설계예요. 가솔린 차 구조에 전기 모터를 우겨 넣는 게 아니라, 처음부터 전기차의 특성에 맞게 플랫폼을 설계하는 것처럼, 업무도 AI 중심으로 재설계합니다." },
+
+/* ──────────────── 아트 ──────────────── */
+{ term:"아트 파이프라인", eng:"Art Pipeline / Asset Pipeline", cat:"art",
+  desc:"에셋이 컨셉 아트 → 모델링 → 텍스처 → 리깅 → 애니메이션 → 엔진 임포트 → QA까지 제작·검수·납품되는 전체 흐름입니다. 아트 PM은 각 단계의 일정과 품질 기준을 관리하고 병목을 해소합니다.",
+  analogy:"자동차 조립 라인이에요. 각 공정(부서)이 순서대로 작업하고 다음 공정에 넘기는 흐름입니다. 어느 한 공정이 늦어지면 이후 전체 일정이 밀립니다." },
+
+{ term:"컨셉 아트", eng:"Concept Art", cat:"art",
+  desc:"게임의 캐릭터·환경·UI·소품 등의 시각 방향을 초기에 정의하는 그림입니다. 개발의 나침반 역할을 하며, 이를 기반으로 3D 모델러·배경 아티스트·UI 아티스트가 작업합니다. 컨셉 아트 없이 시작하면 방향이 계속 흔들립니다.",
+  analogy:"건축 투시도예요. 실제로 짓기 전에 '이런 모습이 될 겁니다'를 시각화해서 팀 전체의 방향을 맞춥니다." },
+
+{ term:"아트 바이블", eng:"Art Bible / Visual Style Guide", cat:"art",
+  desc:"게임 전체의 비주얼 톤앤매너, 컬러 팔레트, 비율 기준, 금지 표현 등을 정의한 기준 문서입니다. 아웃소싱 업체나 신규 아티스트가 팀 스타일에 빠르게 맞출 수 있도록 돕습니다. 아트 바이블이 없으면 에셋마다 스타일이 제각각이 됩니다.",
+  analogy:"브랜드 가이드라인이에요. 로고·색상·폰트 규칙이 없으면 마케팅물마다 다른 회사처럼 보이듯, 아트도 일관성 기준이 없으면 게임 세계관이 산만해집니다." },
+
+{ term:"에셋 트래킹", eng:"Asset Tracking / Asset List", cat:"art",
+  desc:"제작이 필요한 모든 에셋의 목록과 상태(미착수·진행 중·검수 중·완료)를 관리하는 작업입니다. 아트 PM의 핵심 업무로, 보통 Jira나 스프레드시트로 운영됩니다. 누락 에셋이나 지연 에셋을 조기에 파악하는 것이 목적입니다.",
+  analogy:"건설 자재 납품 현황표예요. 어떤 자재가 언제까지 필요하고 지금 어디까지 왔는지를 한눈에 볼 수 있어야 공사 일정을 지킬 수 있습니다." },
+
+{ term:"아트 스펙", eng:"Art Specification / Tech Art Spec", cat:"art",
+  desc:"엔진이 요구하는 에셋의 기술 규격입니다. 텍스처 해상도(512·1024·2048px), 폴리곤 수 상한, 파일 포맷(FBX/PNG), 네이밍 컨벤션 등이 포함됩니다. 아트 스펙을 지키지 않으면 엔진 임포트 오류나 성능 문제가 발생합니다.",
+  analogy:"제조업 부품 규격서예요. 나사 지름이 0.1mm만 달라도 조립이 안 되듯, 게임 에셋도 규격에서 벗어나면 엔진에서 제대로 동작하지 않습니다." },
+
+{ term:"폴리카운트 / LOD", eng:"Polygon Count / Level of Detail", cat:"art",
+  desc:"폴리카운트는 3D 모델의 삼각형(폴리곤) 수로, 많을수록 정밀하지만 성능 부담이 큽니다. LOD(Level of Detail)는 카메라와의 거리에 따라 다른 품질의 모델을 자동으로 전환하는 최적화 기법입니다.",
+  analogy:"원근에 따른 지도 해상도예요. 위성지도를 멀리서 보면 저해상도, 가까이 보면 고해상도로 전환되는 것처럼 3D 모델도 거리에 따라 품질을 조절합니다." },
+
+{ term:"PBR", eng:"Physically Based Rendering / 물리 기반 렌더링", cat:"art",
+  desc:"빛의 물리적 반사·굴절 원리를 시뮬레이션해 현실적인 재질을 표현하는 렌더링 방식입니다. 현대 게임 엔진(Unity·Unreal)의 기본 렌더링 파이프라인입니다. Albedo(기본색), Metallic(금속성), Roughness(거칠기) 텍스처로 재질을 표현합니다.",
+  analogy:"사진 촬영의 조명 원리예요. 같은 물체도 빛의 방향·강도·색온도에 따라 다르게 보이듯, PBR은 현실의 조명 규칙을 그대로 게임에 적용합니다." },
+
+{ term:"UV / 텍스처", eng:"UV Mapping / Texture Map", cat:"art",
+  desc:"3D 모델의 표면을 2D 평면으로 펼쳐서(UV Unwrap) 이미지(텍스처)를 입히는 작업입니다. UV 전개가 깔끔해야 텍스처 왜곡이 없고 해상도를 효율적으로 사용할 수 있습니다.",
+  analogy:"종이 상자 전개도예요. 상자(3D 모델)를 납작하게 펼친 그림(UV 맵)에 그림을 그리면, 다시 접었을 때 입체에 그림이 입혀집니다." },
+
+{ term:"리깅 / 스키닝", eng:"Rigging / Skinning / Skeletal Animation", cat:"art",
+  desc:"3D 캐릭터에 뼈대(Rig/Skeleton)를 심고, 각 폴리곤이 어떤 뼈에 얼마나 영향을 받는지(Skinning/Weighting) 설정하는 작업입니다. 리깅 품질이 낮으면 캐릭터가 움직일 때 메시가 찌그러지거나 뚫리는 현상이 발생합니다.",
+  analogy:"마리오네트 인형이에요. 줄(뼈대)을 어디에 달았는지에 따라 인형(3D 모델)이 자연스럽게 움직이는지 결정됩니다. 줄 위치가 잘못되면 엉뚱한 부위가 움직입니다." },
+
+{ term:"VFX / 이펙트", eng:"Visual Effects / VFX / Particle System", cat:"art",
+  desc:"폭발·마법·날씨·HUD 등 게임 내 시각 효과입니다. 파티클 시스템(작은 입자 수천 개의 시뮬레이션)과 셰이더(재질 표현 코드)로 구현합니다. VFX는 게임의 타격감·몰입감에 직결되며, 아트 PM이 이펙트 아티스트 일정과 엔진 최적화를 조율합니다.",
+  analogy:"영화 CG 특수효과예요. 실제로 폭발시키지 않아도 폭발처럼 보이게 만드는 것이 VFX입니다. 잘 만들면 느낌이 살고, 부족하면 게임이 밋밋해집니다." },
+
+{ term:"아웃소싱", eng:"Art Outsourcing", cat:"art",
+  desc:"내부 아트팀 인력이 부족하거나 특정 장르 전문성이 필요할 때 외부 스튜디오에 에셋 제작을 의뢰하는 것입니다. 아트 바이블·스펙 전달, 중간 검수, 최종 납품 검수까지 아트 PM이 커뮤니케이션을 담당합니다. 납기·품질·보안이 핵심 관리 포인트입니다.",
+  analogy:"식자재 외부 구매예요. 주방 인력이 부족하면 반가공 식재료를 외부에서 받아 씁니다. 품질 기준(레시피)을 명확히 전달하고 납품된 것을 검수하는 것이 구매 담당자의 역할입니다." },
+
+{ term:"아트 리뷰 / 품질 기준", eng:"Art Review / Quality Standard", cat:"art",
+  desc:"제작된 에셋이 아트 바이블과 스펙을 충족하는지 검수하는 단계입니다. 아트 디렉터(AD)가 스타일 기준으로, 테크니컬 아티스트(TA)가 기술 규격으로 검수합니다. 아트 PM은 리뷰 일정을 조율하고 피드백이 반영되는지 추적합니다.",
+  analogy:"출판사 편집 교정 과정이에요. 초고(1차 에셋)를 편집자(AD)와 교정자(TA)가 각각 다른 기준으로 검토하고, 수정 후 최종 승인을 받아야 출판(임포트)됩니다." },
+
+{ term:"스프라이트 / 아틀라스", eng:"Sprite / Sprite Atlas", cat:"art",
+  desc:"스프라이트는 2D 게임이나 UI에 사용하는 이미지 에셋입니다. 스프라이트 아틀라스는 여러 스프라이트를 하나의 큰 이미지 파일로 합쳐 드로우콜을 줄이는 최적화 기법입니다.",
+  analogy:"스티커 시트예요. 스티커를 낱장으로 관리하는 것보다 한 장에 모아두면 꺼내쓰기도 편하고(성능), 낭비도 적습니다(메모리 효율)." },
+
+{ term:"애니메이션 스테이트 머신", eng:"Animation State Machine / FSM", cat:"art",
+  desc:"캐릭터가 '대기→이동→점프→공격' 등 상태 간 전환 조건을 정의하는 로직입니다. Unity의 Animator Controller, Unreal의 AnimGraph로 구현합니다. 아트 PM은 기획이 요구하는 애니메이션 상태 수와 전환 조건을 TA·개발팀과 사전 정의해야 합니다.",
+  analogy:"신호등 제어 로직이에요. 빨강→초록→노랑→빨강 순서로 언제 어떤 조건에서 상태가 바뀌는지 규칙이 있듯, 캐릭터 애니메이션도 전환 규칙을 명확히 정의해야 자연스럽게 동작합니다." },
+
+{ term:"테크니컬 아티스트 (TA)", eng:"Technical Artist / TA", cat:"art",
+  desc:"아트와 개발 사이의 다리 역할을 하는 직군입니다. 아트 스펙 정의, 셰이더 제작, 파이프라인 자동화, 최적화 지원을 담당합니다. 아트 PM은 TA를 통해 기술적 제약을 아티스트에게 전달하고, 개발팀 요구사항을 아트팀이 이해할 수 있게 번역합니다.",
+  analogy:"건축 현장의 감리자예요. 설계도(기획·아트)와 시공(개발) 사이에서 '이 설계가 실제로 지어질 수 있는지', '이 시공이 설계대로인지'를 검증하고 중재합니다." },
+
+/* ── Unity 아트팀 용어 ── */
+{ term:"씬 (Scene)", eng:"Unity Scene", cat:"art",
+  desc:"Unity에서 하나의 게임 공간·레벨·메뉴 화면을 담는 작업 단위입니다. 씬 안에 게임오브젝트들이 배치되며, 게임은 씬 간 전환으로 구성됩니다. 아트팀은 씬 단위로 라이팅·배경·이펙트 작업을 분담하고 아트 PM이 씬별 완성도를 추적합니다.",
+  analogy:"연극 무대예요. 막(씬)마다 배경·소품·조명이 달라지며, 각 막의 준비 상태를 무대 감독(아트 PM)이 체크합니다." },
+
+{ term:"프리팹 (Prefab)", eng:"Prefab / Prefab Variant", cat:"art",
+  desc:"GameObject와 컴포넌트 설정을 저장해두고 여러 씬에서 재사용할 수 있는 템플릿입니다. 원본 프리팹을 수정하면 모든 씬의 인스턴스에 반영됩니다. 아트 수정사항을 씬마다 일일이 바꾸지 않아도 되므로 에셋 유지보수 비용이 줄어듭니다.",
+  analogy:"도장(스탬프)이에요. 원본 도장(프리팹)을 수정하면 그 도장으로 찍은 모든 인쇄물(인스턴스)이 자동으로 업데이트됩니다." },
+
+{ term:"머티리얼 / 셰이더", eng:"Material / Shader", cat:"art",
+  desc:"머티리얼은 오브젝트의 색상·반사도·투명도 등 표면 속성을 정의하는 에셋입니다. 셰이더는 머티리얼이 화면에 어떻게 렌더링될지 결정하는 GPU 프로그램입니다. 아트팀은 머티리얼을 세팅하고, TA가 커스텀 셰이더를 제작합니다.",
+  analogy:"페인트와 붓 기법이에요. 머티리얼은 색상·광택의 페인트, 셰이더는 붓질 기법(수채화·유화·점묘)입니다. 같은 색도 기법에 따라 완전히 다른 느낌이 납니다." },
+
+{ term:"URP / HDRP", eng:"Universal Render Pipeline / High Definition Render Pipeline", cat:"art",
+  desc:"Unity의 렌더 파이프라인입니다. URP는 모바일·인디게임에 최적화된 범용 파이프라인, HDRP는 콘솔·PC AAA급 고품질 그래픽용 파이프라인입니다. 프로젝트 초기에 선택하며 중간에 바꾸면 모든 머티리얼을 재작업해야 합니다.",
+  analogy:"주방 설비 선택이에요. 가정용 오븐(URP)과 업소용 화덕(HDRP)은 처음부터 맞는 것을 골라야 합니다. 중간에 바꾸면 레시피(셰이더·머티리얼) 전부를 다시 맞춰야 합니다." },
+
+{ term:"라이트맵 베이킹", eng:"Lightmap Baking / Static Lighting", cat:"art",
+  desc:"씬의 정적 조명 계산 결과를 텍스처로 미리 구워두는 작업입니다. 런타임에 조명을 실시간 계산하지 않으므로 성능이 좋아지지만, 조명이 바뀌면 다시 구워야 합니다. 베이킹 시간이 수 분~수 시간 걸리므로 아트 일정에 반영해야 합니다.",
+  analogy:"사진 인화예요. 사진을 인화(베이킹)해두면 볼 때마다 현상하지 않아도 되지만, 사진을 다시 찍으면(조명 변경) 인화를 새로 해야 합니다." },
+
+{ term:"포스트 프로세싱", eng:"Post Processing / Post Process Volume", cat:"art",
+  desc:"씬이 카메라에 담긴 후 화면에 적용하는 영상 보정 효과입니다. Bloom(빛 번짐), Color Grading(색 보정), Depth of Field(아웃포커스), Vignette(비네팅) 등이 있습니다. 게임의 전체 분위기와 색감을 결정하는 마지막 단계입니다.",
+  analogy:"사진 필터예요. 같은 사진도 필터에 따라 따뜻하거나 차갑거나 빈티지하게 보이듯, 포스트 프로세싱이 게임의 전체 톤앤매너를 완성합니다." },
+
+{ term:"파티클 시스템", eng:"Particle System / VFX Graph", cat:"art",
+  desc:"수많은 작은 입자를 제어해 불꽃·연기·마법·비 등을 표현하는 Unity의 이펙트 시스템입니다. 기존 Shuriken 파티클 시스템과 GPU 기반의 VFX Graph 두 가지가 있습니다. 퍼포먼스 예산 안에서 이펙트 품질을 조율하는 것이 TA와 아트 PM의 역할입니다.",
+  analogy:"분수 연출이에요. 물(입자)의 방향·속도·개수·색상을 조절해 다양한 형태를 만들 수 있습니다. 물 분사량이 너무 많으면 펌프(GPU)에 과부하가 걸립니다." },
+
+{ term:"애니메이터 / 애니메이션 클립", eng:"Animator Controller / Animation Clip", cat:"art",
+  desc:"Animation Clip은 캐릭터의 특정 동작(걷기·점프·공격)을 담은 파일이고, Animator Controller는 이 클립들 사이의 전환 조건을 정의하는 상태 머신입니다. 아트 PM은 필요한 클립 목록을 기획팀과 확정하고 애니메이터 작업 일정을 관리합니다.",
+  analogy:"댄스 레퍼토리 관리예요. 각 안무(클립)를 누가 만들지 배정하고, 공연(게임 내)에서 어떤 순서로 어떤 조건에 춥지 순서도(Animator)를 미리 짜둡니다." },
+
+{ term:"타임라인 / 시네머신", eng:"Unity Timeline / Cinemachine", cat:"art",
+  desc:"Timeline은 시네마틱 컷씬·이벤트 연출을 트랙 기반으로 편집하는 Unity 도구입니다. Cinemachine은 카메라 이동·흔들림·트래킹을 코드 없이 설정할 수 있는 카메라 관리 시스템입니다. 아트팀이 기획 의도대로 연출을 직접 제작할 수 있게 해줍니다.",
+  analogy:"영상 편집 소프트웨어예요. 영상 편집자(아트팀)가 컷·전환·카메라 움직임을 타임라인에 직접 배치해서 완성도 높은 연출을 만들어냅니다." },
+
+{ term:"드로우콜 / 배칭", eng:"Draw Call / Batching / GPU Instancing", cat:"art",
+  desc:"드로우콜은 CPU가 GPU에 오브젝트 하나를 그려달라고 요청하는 것입니다. 드로우콜이 많을수록 성능이 떨어집니다. 배칭(Static/Dynamic Batching)과 GPU Instancing은 여러 오브젝트를 묶어 드로우콜 수를 줄이는 최적화 기법입니다. 아트팀이 에셋을 어떻게 구성하느냐가 성능에 직결됩니다.",
+  analogy:"식당 서빙이에요. 손님마다 한 번씩 주문을 받으러 가는 것(드로우콜)보다, 여러 주문을 한 번에 묶어 처리하는 것(배칭)이 서버(CPU)에게 훨씬 효율적입니다." },
+
+{ term:"오클루전 컬링", eng:"Occlusion Culling", cat:"art",
+  desc:"카메라에서 보이지 않는 오브젝트(다른 오브젝트 뒤에 가려진 것)를 렌더링 대상에서 제외해 성능을 최적화하는 기법입니다. Unity에서 사전에 오클루전 데이터를 베이킹해야 하며, 씬 구성과 오브젝트 배치가 이 효율에 영향을 줍니다.",
+  analogy:"무대 뒤에 있는 배우예요. 관객(카메라)이 볼 수 없는 곳에 있는 배우는 굳이 분장하고 대기할 필요가 없습니다. 무대 뒤 정리(씬 구성)가 잘 돼있을수록 공연(렌더링)이 효율적입니다." },
+
+{ term:"Addressables", eng:"Unity Addressables / Asset Management", cat:"art",
+  desc:"에셋을 주소(Key)로 동적 로드·언로드하는 Unity의 리소스 관리 시스템입니다. 에셋을 앱 빌드에 포함시키지 않고 서버에서 다운받아 쓸 수 있어, UGC 콘텐츠나 DLC에 적합합니다. 아트 PM은 어떤 에셋을 Addressables로 관리할지 TA·개발팀과 함께 구조를 설계합니다.",
+  analogy:"스트리밍 서비스예요. 영화 전부를 기기에 저장하는 대신(빌드 내 포함), 필요할 때만 스트리밍(동적 로드)해서 기기 용량을 줄이고 콘텐츠를 유연하게 업데이트합니다." },
+
+/* ── 게임 개발 아트 추가 ── */
+{ term:"3D 모델링", eng:"3D Modeling / High-poly / Low-poly", cat:"art",
+  desc:"3D 소프트웨어(Maya, Blender, ZBrush 등)로 오브젝트의 형태를 제작하는 작업입니다. 고해상도 하이폴리 모델을 먼저 만든 뒤, 게임에 사용할 로우폴리 모델로 리토폴로지(Retopology)해서 폴리카운트를 줄입니다.",
+  analogy:"조각과 주물이에요. 세밀한 조각(하이폴리)을 만든 뒤, 대량 생산이 가능한 금형(로우폴리)을 따로 제작합니다. 조각의 디테일은 텍스처로 구워 넣습니다." },
+
+{ term:"노멀맵", eng:"Normal Map / Bump Map", cat:"art",
+  desc:"폴리곤 수를 늘리지 않고 표면 굴곡의 빛 반사 정보를 텍스처로 저장해 입체감을 표현하는 기법입니다. 하이폴리에서 로우폴리로 디테일을 '굽는(bake)' 과정을 통해 생성됩니다. 파란빛이 도는 특유의 텍스처로 쉽게 구분됩니다.",
+  analogy:"부조 벽화예요. 실제로 튀어나오게 조각하는 대신, 그림자만 그려서 입체감을 착시처럼 만드는 기법입니다. 실제 두께는 평평하지만 빛을 받으면 울퉁불퉁해 보입니다." },
+
+{ term:"블렌드 셰이프", eng:"Blend Shape / Morph Target / Facial Animation", cat:"art",
+  desc:"하나의 메시를 다른 형태로 변형시키는 애니메이션 기법입니다. 주로 얼굴 표정(웃음·분노·놀람), 입 모양, 캐릭터 커스터마이징에 사용됩니다. 여러 블렌드 셰이프를 가중치로 혼합해 자연스러운 전환을 만듭니다.",
+  analogy:"밀가루 반죽이에요. 동그란 모양(기본 메시)에서 길쭉하게(웃는 표정) 또는 납작하게(화난 표정) 자유롭게 형태를 바꿀 수 있습니다." },
+
+{ term:"IK (역운동학)", eng:"Inverse Kinematics / IK", cat:"art",
+  desc:"목적지(손·발)를 지정하면 뼈대가 역산으로 자동 계산되는 애니메이션 기법입니다. 발이 항상 바닥에 붙어 있거나, 손이 물체를 정확히 잡는 등 환경에 반응하는 자연스러운 움직임을 만들 때 씁니다.",
+  analogy:"손으로 문 손잡이 잡기예요. '팔꿈치를 몇 도 구부리고 손목을 얼마나 돌려라'가 아니라, '이 손잡이를 잡아라'고 목표만 알려주면 팔 전체가 알아서 움직이는 구조입니다." },
+
+{ term:"모션 캡처 (Mocap)", eng:"Motion Capture / Mocap", cat:"art",
+  desc:"실제 배우나 퍼포머의 움직임을 센서·카메라로 촬영해 3D 캐릭터에 적용하는 애니메이션 제작 방식입니다. 자연스럽고 사실적인 동작을 빠르게 만들 수 있지만 스튜디오 비용과 클린업 작업이 필요합니다.",
+  analogy:"더빙이에요. 배우(모캡 퍼포머)가 연기하면 캐릭터가 그 감정과 동작을 그대로 따라갑니다. 목소리(움직임) 원본은 사람이 제공하고, 외모(메시)만 캐릭터로 교체합니다." },
+
+{ term:"컷씬 / 인게임 시네마틱", eng:"Cutscene / In-game Cinematic", cat:"art",
+  desc:"플레이를 잠시 멈추고 연출되는 영상 장면입니다. 사전 렌더링된 영상(Pre-rendered)과 엔진에서 실시간으로 재생하는 인게임 시네마틱(In-engine)으로 나뉩니다. 인게임 시네마틱은 Unity Timeline·Cinemachine으로 제작하며 아트·기획·개발 협업이 집중됩니다.",
+  analogy:"드라마 중간 삽입 장면이에요. 게임 플레이(드라마 본편)를 잠시 멈추고 스토리를 설명하거나 감정을 전달하는 연출 장면입니다." },
+
+{ term:"환경 아트", eng:"Environment Art / Level Art / Background Art", cat:"art",
+  desc:"게임의 배경·지형·건물·소품 등 맵을 구성하는 모든 시각 요소를 제작하는 분야입니다. 레벨 아트(Level Art)라고도 합니다. 모듈식 에셋(반복 배치 가능한 조각) 설계가 제작 효율과 성능 최적화에 중요합니다.",
+  analogy:"영화 세트 디자인이에요. 배우(캐릭터)가 돋보이도록 공간을 꾸미되, 촬영(렌더링) 부담이 크지 않게 재사용 가능한 소품(모듈 에셋)을 최대한 활용합니다." },
+
+{ term:"UI 아트", eng:"UI Art / HUD / Interface Design", cat:"art",
+  desc:"체력바·미니맵·인벤토리·버튼 등 게임 인터페이스의 시각 요소를 디자인하는 분야입니다. HUD(Heads-Up Display)는 플레이 중 항상 화면에 표시되는 UI입니다. 게임플레이를 방해하지 않으면서 정보를 전달하는 것이 핵심입니다.",
+  analogy:"자동차 계기판 디자인이에요. 운전(게임플레이) 중에도 한눈에 속도·연료·경고를 파악할 수 있게 배치하는 것이 UI 아트의 본질입니다." },
+
+{ term:"아트 디렉터 (AD)", eng:"Art Director / AD", cat:"art",
+  desc:"게임 전체의 비주얼 방향성을 총괄하는 직군입니다. 컨셉 아트 승인, 아트 바이블 수립, 각 파트(캐릭터·배경·UI·이펙트) 간 일관성 유지가 주요 역할입니다. 아트 PM은 AD의 방향성을 일정과 리소스로 구체화합니다.",
+  analogy:"영화 감독이에요. 배우·촬영·편집·음악 각 파트가 다른 방향을 보지 않도록 전체 비전을 제시하고, 최종 결과물의 일관성을 책임집니다." },
+
+{ term:"스카이박스", eng:"Skybox / Environment Map / HDRI", cat:"art",
+  desc:"씬을 둘러싸는 배경 하늘·원경을 표현하는 텍스처입니다. 큐브맵(6면) 또는 HDRI(360도 이미지) 형식을 사용합니다. 조명 정보도 함께 담아 씬 전체의 환경광으로 활용할 수 있습니다.",
+  analogy:"촬영 스튜디오 배경 천이에요. 실제 하늘을 찍지 않고, 배경막(스카이박스)을 교체하면 낮·밤·우주·판타지 세계 어디서나 찍은 것처럼 보입니다." },
+
+{ term:"프롭", eng:"Prop / Interactive Object / Deco", cat:"art",
+  desc:"게임 씬에 배치되는 소품 오브젝트입니다. 인터랙션이 가능한 프롭(문·박스·무기)과 장식용 데코(나무·돌·가구)로 나뉩니다. 모듈식으로 제작해 다양한 씬에서 재사용할수록 제작 비용이 줄어듭니다.",
+  analogy:"영화 소품실이에요. 한 번 만들어두면 여러 영화(씬)에서 재사용할 수 있습니다. 소품이 많고 다양할수록 씬이 풍성해집니다." },
+
+{ term:"밉맵", eng:"Mipmap / Mip Level", cat:"art",
+  desc:"하나의 텍스처를 거리에 따라 자동으로 저해상도 버전으로 전환하는 최적화 기법입니다. 텍스처를 1/2 크기로 줄인 버전을 여러 단계(Mip Level) 미리 생성해 저장합니다. 밉맵 없이 먼 거리에서 고해상도 텍스처를 렌더링하면 앨리어싱(깜빡임)이 발생합니다.",
+  analogy:"지도 줌 레벨이에요. 멀리서 볼 땐 개략적인 저해상도 지도를, 가까이 보면 상세한 고해상도 지도를 보여주는 것처럼 텍스처도 거리에 맞는 품질을 사용합니다." },
+
+{ term:"에셋 네이밍 컨벤션", eng:"Asset Naming Convention", cat:"art",
+  desc:"팀 전체가 에셋 파일명을 일관되게 작성하는 규칙입니다. 예: `CH_Warrior_Body_D.png` (CH=캐릭터, Warrior=이름, Body=파트, D=Diffuse). 네이밍 규칙이 없으면 검색·관리·자동화가 불가능해지고 임포트 오류가 잦아집니다.",
+  analogy:"도서관 분류 체계예요. '청구기호'가 없으면 책이 아무리 많아도 찾을 수가 없습니다. 파일도 이름 규칙이 없으면 에셋이 쌓일수록 찾기가 힘들어집니다." },
+
+{ term:"임포트 세팅", eng:"Import Settings / Texture Compression", cat:"art",
+  desc:"Unity에 에셋을 가져올 때 플랫폼별 압축 방식·해상도·포맷을 설정하는 옵션입니다. 텍스처는 PC·Android·iOS마다 다른 압축 포맷(BC·ETC2·ASTC)을 사용합니다. 임포트 세팅을 잘못 하면 화질 저하·용량 낭비·렌더링 오류가 발생합니다.",
+  analogy:"수출 통관 규격이에요. 같은 상품도 수출 국가(플랫폼)마다 포장 규격과 라벨 요건이 달라 그에 맞게 준비해야 통관(임포트)이 됩니다." },
+
+];
+
+const catLabels = {
+  game:'게임 업계', pm:'프로젝트 관리', ugc:'UGC/플랫폼', tech:'개발/기술',
+  mobile:'모바일 프로세스', live:'라이브 운영', biz:'사업 PM', qa:'QA',
+  tools:'협업 툴', engine:'엔진/UaaL', devproc:'개발 프로세스',
+  infra:'인프라/배포', data:'데이터/분석', ai:'AI/생산성', art:'아트'
+};
+
+const counts = { game:0, pm:0, ugc:0, tech:0, mobile:0, live:0, biz:0, qa:0, tools:0, engine:0, devproc:0, infra:0, data:0, ai:0, art:0 };
+terms.forEach(t => counts[t.cat]++);
+document.getElementById('total-badge').textContent = terms.length;
+
+function makeCard(t, idx) {
+  const d = document.createElement('div');
+  d.className = 'card';
+  d.dataset.cat = t.cat;
+  d.style.animationDelay = Math.min(idx * 0.022, 0.55) + 's';
+  d.innerHTML = `
+    <div class="card-head">
+      <div>
+        <div class="card-term">${t.term}</div>
+        <div class="card-eng">${t.eng}</div>
+      </div>
+      <span class="cat-tag ${t.cat}">${catLabels[t.cat]}</span>
+    </div>
+    <div class="card-desc">${t.desc}</div>
+    <div class="card-analogy">${t.analogy}</div>
+    <div class="card-toggle"><span class="card-toggle-txt"></span></div>
+  `;
+  d.addEventListener('click', () => d.classList.toggle('expanded'));
+  return d;
+}
+
+const grid = document.getElementById('grid');
+const countEl = document.getElementById('result-count');
+let currentCat = 'all', currentQuery = '';
+
+const koMap = {
+  /* 게임 */
+  'GDD':'게임디자인문서', 'DAU / MAU':'디에이유 엠에이유', 'ARPU / ARPPU':'에이알피유',
+  'PvP / PvE':'피브이피 피브이이', 'QA':'큐에이',
+  /* PM */
+  'WBS':'더블유비에스', 'KPI':'케이피아이', 'OKR':'오케이알', 'RACI':'라씨',
+  'PoC':'피오씨 개념증명', 'MVP':'엠브이피 최소기능제품',
+  /* UGC */
+  'UGC':'유지씨 유저제너레이티드콘텐츠', 'GaaP':'게임애즈어플랫폼',
+  /* 기술 */
+  'SDK':'에스디케이', 'SVN':'에스브이엔 서브버전',
+  'Bearer Token / 401':'베어러토큰 인증토큰',
+  'API Gateway / Kong':'에이피아이게이트웨이 콩',
+  /* 모바일 */
+  'APK / IPA':'에이피케이 아이피에이',
+  'ASO':'에이에스오 앱스토어최적화',
+  'OTA 업데이트 / 리소스 패치':'오티에이',
+  'TestFlight / 내부 테스트 트랙':'테스트플라이트',
+  /* 사업PM */
+  'NDA':'엔디에이 비밀유지계약', 'MOU / LOI':'엠오유 엘오아이',
+  'IP 라이센싱':'아이피라이센싱', 'BM / 비즈니스 모델':'비즈니스모델',
+  'UA / 유저 획득':'유에이 유저어퀴지션', 'CPI / LTV':'씨피아이 엘티브이',
+  'ROAS':'로아스', 'LQA':'엘큐에이 현지화품질검수',
+  /* 협업툴 */
+  'JQL':'제이큐엘 지라쿼리언어', 'MCP':'엠씨피 모델컨텍스트프로토콜',
+  'PAT':'피에이티 퍼스널액세스토큰', 'DSN':'디에스엔 데이터소스네임',
+  /* QA */
+  'STR':'에스티알 재현절차', 'UAT':'유에이티 인수테스트',
+  /* 개발프로세스 */
+  'CI/CD':'씨아이씨디 지속적통합배포', 'DevOps':'데브옵스',
+  'SSOT':'에스에스오티 단일진실공급원', 'Shift Left':'시프트레프트',
+  'PR / 코드 리뷰':'풀리퀘스트 코드리뷰',
+  /* 인프라 */
+  'MSA (마이크로서비스)':'엠에스에이 마이크로서비스아키텍처',
+  'EDA (이벤트 기반 아키텍처)':'이디에이 이벤트드리븐',
+  'IaC (인프라 코드화)':'아이에이씨 인프라코드화',
+  'Kubernetes (K8s)':'쿠버네티스 케이에이츠',
+  '서킷 브레이커':'서킷브레이커',
+  /* 데이터 */
+  'CTR / CVR':'씨티알 씨브이알 클릭률전환율',
+  'ARPDAU':'에이알피디에이유',
+  'Firebase':'파이어베이스 파이어스토어',
+  'A/B 테스트':'에이비테스트 에이비',
+  /* AI */
+  'PromptOps':'프롬프트옵스', 'Human-in-the-loop':'휴먼인더루프 히틀',
+  /* 엔진/UaaL */
+  'UaaL (Unity as a Library)':'유에이에이엘',
+  'AAR / .framework':'에이에이알 프레임워크',
+  /* 아트 */
+  'PBR':'피비알 물리기반렌더링',
+  'VFX / 이펙트':'브이에프엑스 이펙트',
+  'UV / 텍스처':'유브이 텍스처맵핑',
+  'IK (역운동학)':'아이케이 역운동학 인버스키네마틱스',
+  '모션 캡처 (Mocap)':'모캡 모션캡처',
+  /* Unity */
+  'URP / HDRP':'유알피 에이치디알피 렌더파이프라인',
+  'Addressables':'어드레서블 어드레서블스',
+  'LOD':'엘오디 레벨오브디테일',
+  'SLA / 가용성':'에스엘에이',
+};
+
+function render() {
+  grid.innerHTML = '';
+  const q = currentQuery.trim().toLowerCase();
+  const catOrder = ['pm','game','ugc','tech','mobile','live','biz','qa','tools','engine','devproc','infra','data','ai','art'];
+  const filtered = terms.filter(t => {
+    const catOk = currentCat === 'all'
+      || currentCat === 'collab' && (t.cat === 'biz' || t.cat === 'qa')
+      || t.cat === currentCat;
+    const alias = koMap[t.term] || '';
+    const qOk = !q || [t.term, t.eng, t.desc, t.analogy, alias].some(s => s.toLowerCase().includes(q));
+    return catOk && qOk;
+  }).sort((a, b) => {
+    if (currentCat !== 'all') return 0;
+    return (catOrder.indexOf(a.cat) ?? 99) - (catOrder.indexOf(b.cat) ?? 99);
+  });
+  countEl.textContent = filtered.length + '개';
+  if (filtered.length === 0) {
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.innerHTML = '<div class="big">🔍</div><p>검색 결과가 없습니다.</p>';
+    grid.appendChild(e);
+  } else {
+    filtered.forEach((t, i) => grid.appendChild(makeCard(t, i)));
+  }
+}
+
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = btn.dataset.cat;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  currentQuery = e.target.value;
+  render();
+});
+
+render();
+
+// ── 플로팅 찾기 버튼 / 모달 ──
+const fab        = document.getElementById('fabBtn');
+const modal      = document.getElementById('searchModal');
+const modalInput = document.getElementById('modalSearch');
+const modalCount = document.getElementById('modalCount');
+const headerInput = document.getElementById('search');
+
+function openModal() {
+  modal.classList.add('open');
+  modalInput.value = headerInput.value;
+  setTimeout(() => modalInput.focus(), 50);
+  updateModalCount();
+}
+function closeModal() { modal.classList.remove('open'); }
+function updateModalCount() {
+  const q = modalInput.value.trim().toLowerCase();
+  if (!q) { modalCount.textContent = ''; return; }
+  const n = terms.filter(t => {
+    const a = koMap[t.term] || '';
+    return [t.term, t.eng, t.desc, t.analogy, a].some(s => s.toLowerCase().includes(q));
+  }).length;
+  modalCount.textContent = n + '개 검색됨';
+}
+
+fab.addEventListener('click', openModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'f') { e.preventDefault(); openModal(); }
+});
+modalInput.addEventListener('input', e => {
+  currentQuery = e.target.value;
+  headerInput.value = e.target.value;
+  render();
+  updateModalCount();
+});
+</script>
+</body>
+</html>
